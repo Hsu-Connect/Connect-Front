@@ -1,4 +1,4 @@
-package com.hsLink.hslink.ui.theme
+package com.hsLink.hslink.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
