@@ -7,13 +7,22 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
-
+    alias(libs.plugins.google.services)
 
 }
+
+//val properties = Properties().apply {
+//    load(project.rootProject.file("local.properties").inputStream())
+//}
+
 
 val properties = Properties().apply {
-    load(project.rootProject.file("local.properties").inputStream())
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
+
 android {
     namespace = "com.hsLink.hslink"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -26,7 +35,12 @@ android {
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", properties["base.url"].toString())
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"${properties.getProperty("base.url", "https://default-url.com")}\""
+        )
+        //buildConfigField("String", "BASE_URL", properties["base.url"].toString())
     }
 
     buildTypes {
@@ -78,5 +92,8 @@ dependencies {
     implementation(libs.timber)
 
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
 }
