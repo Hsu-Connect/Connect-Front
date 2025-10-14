@@ -38,7 +38,7 @@ platform :android do
 
   desc "Build and distribute to Firebase App Distribution"
   lane :distribute do
-    gradle(task: "clean assembleRelease")
+    gradle(task: "clean assembleDebug")
 
     firebase_app_distribution(
       app: "1:71578488789:android:603f0a4786a2a08e97f75c",
