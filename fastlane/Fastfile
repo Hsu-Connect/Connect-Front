@@ -42,7 +42,7 @@ platform :android do
 
     firebase_app_distribution(
       app: "1:71578488789:android:603f0a4786a2a08e97f75c",
-      service_credentials_file: File.expand_path("../hsconnect-6077d-4a0fd86a106f.json", __dir__),
+      service_credentials_file: File.expand_path("../firebase-service-account.json", __dir__),
       testers: "dmp100@naver.com",
       release_notes: "New test build from Fastlane",
       android_artifact_type: "APK"
