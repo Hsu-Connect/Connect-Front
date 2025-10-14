@@ -47,3 +47,10 @@ build/
 # Firebase Service Account
 firebase-service-account.json
 hsconnect-*.json
+
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
