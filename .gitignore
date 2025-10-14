@@ -45,5 +45,5 @@ captures/
 build/
 
 # Firebase Service Account
-*service-account*.json
+firebase-service-account.json
 hsconnect-*.json
