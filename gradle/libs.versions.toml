@@ -49,10 +49,6 @@ coil = "2.6.0"
 # Timber
 timber = "5.0.1"
 
-# Google Services
-googleServices = "4.4.3"
-firebaseBom = "34.3.0"
-
 [libraries]
 # Test
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -104,10 +100,6 @@ material = { group = "com.google.android.material", name = "material", version.r
 # Timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
-# Firebase
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -118,7 +110,6 @@ devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
-google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 
 
 [bundles]
