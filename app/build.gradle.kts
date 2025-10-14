@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
-
+    alias(libs.plugins.google.services)
 
 }
 
@@ -78,5 +78,8 @@ dependencies {
     implementation(libs.timber)
 
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
 }
