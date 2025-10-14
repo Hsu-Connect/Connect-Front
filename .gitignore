@@ -43,3 +43,7 @@ captures/
 # Gradle
 .gradle/
 build/
+
+# Firebase Service Account
+*service-account*.json
+hsconnect-*.json
