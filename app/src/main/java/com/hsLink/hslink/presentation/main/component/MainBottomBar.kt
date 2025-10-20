@@ -86,7 +86,7 @@ private fun MainNavigationBarItem(
 
     Column(
         modifier = modifier
-            .noRippleClickable(onClick),
+            .noRippleClickable(true, onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
