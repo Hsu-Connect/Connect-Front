@@ -33,23 +33,30 @@ fun HsLinkTopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = leftIcon ?: 0),
-            contentDescription = "leftIcon"
-        )
+        leftIcon?.let {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = it),
+                contentDescription = "leftIcon"
+            )
+        }
 
         title()
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            imageVector = ImageVector.vectorResource(id = rightIconFirst ?: 0),
-            contentDescription = "rightIconFirst"
-        )
-        Icon(
-            imageVector = ImageVector.vectorResource(id = rightIconSecond ?: 0),
-            contentDescription = "rightIconSecond"
-        )
+        rightIconFirst?.let {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = it),
+                contentDescription = "rightIconFirst"
+            )
+        }
+
+        rightIconSecond?.let {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = it),
+                contentDescription = "rightIconSecond"
+            )
+        }
     }
 }
 
