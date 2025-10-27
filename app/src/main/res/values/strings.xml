@@ -6,4 +6,7 @@
     <string name="bottom_navigation_item_community">community</string>
     <string name="bottom_navigation_item_mypage">mypage</string>
 
+
+    <string name="home_content_field_all">전체보기</string>
+
 </resources>
