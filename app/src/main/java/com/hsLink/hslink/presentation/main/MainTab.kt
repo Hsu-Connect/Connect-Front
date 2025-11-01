@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.navigation.MainTabRoute
-import com.hsLink.hslink.presentation.home.navigation.Community
+import com.hsLink.hslink.presentation.community.navigation.main.Community
 import com.hsLink.hslink.presentation.home.navigation.Home
 import com.hsLink.hslink.presentation.home.navigation.Search
 import com.hsLink.hslink.presentation.mypage.navigation.Mypage

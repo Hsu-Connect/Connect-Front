@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
+import com.hsLink.hslink.core.util.noRippleClickable
 
 @Composable
 fun HsLinkTopBar(
@@ -25,6 +26,9 @@ fun HsLinkTopBar(
     @DrawableRes rightIconFirst: Int? = null,
     @DrawableRes rightIconSecond: Int? = null,
     @DrawableRes leftIcon: Int? = null,
+    onRightIconFirstClick: () -> Unit = {},
+    onRightIconSecondClick: () -> Unit = {},
+    onLeftIconClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -36,7 +40,8 @@ fun HsLinkTopBar(
         leftIcon?.let {
             Icon(
                 imageVector = ImageVector.vectorResource(id = it),
-                contentDescription = "leftIcon"
+                contentDescription = "leftIcon",
+                modifier = Modifier.noRippleClickable(onClick = onLeftIconClick)
             )
         }
 
@@ -47,14 +52,16 @@ fun HsLinkTopBar(
         rightIconFirst?.let {
             Icon(
                 imageVector = ImageVector.vectorResource(id = it),
-                contentDescription = "rightIconFirst"
+                contentDescription = "rightIconFirst",
+                modifier = Modifier.noRippleClickable(onClick = onRightIconFirstClick)
             )
         }
 
         rightIconSecond?.let {
             Icon(
                 imageVector = ImageVector.vectorResource(id = it),
-                contentDescription = "rightIconSecond"
+                contentDescription = "rightIconSecond",
+                modifier = Modifier.noRippleClickable(onClick = onRightIconSecondClick)
             )
         }
     }

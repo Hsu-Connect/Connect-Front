@@ -93,11 +93,13 @@ fun HsLinkTextField(
                         )
                     }
                 }
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = leadingIconRes ?: 0),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
+                leadingIconRes?.let { iconRes ->
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = iconRes),
+                        contentDescription = null,
+                        tint = Color.Unspecified
+                    )
+                }
             }
         }
     )
