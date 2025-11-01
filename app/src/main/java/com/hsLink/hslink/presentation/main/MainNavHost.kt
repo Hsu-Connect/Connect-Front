@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.hsLink.hslink.presentation.home.navigation.communityNavGraph
+import com.hsLink.hslink.presentation.community.navigation.main.communityNavGraph
+import com.hsLink.hslink.presentation.community.navigation.post.communityPostNavGraph
+import com.hsLink.hslink.presentation.community.navigation.write.communityWriteNavGraph
 import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
 import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.mypageNavGraph
@@ -23,7 +25,23 @@ fun MainNavHost(
     ) {
         homeNavGraph(padding)
         searchNavGraph(padding)
-        communityNavGraph(padding)
+        communityNavGraph(
+            padding,
+            navigateUp = navigator::navigateUp,
+            navigateToWriting = navigator::navigateWriteCommunity,
+            navigateToPost = navigator::navigateToCommunityPost
+        )
         mypageNavGraph(padding)
+
+        communityWriteNavGraph(
+            padding = padding,
+            navigateUp = navigator::navigateUp,
+            navigateToCommunity = navigator::navigateToCommunity
+        )
+
+        communityPostNavGraph(
+            padding = padding,
+            navigateUp = navigator::navigateUp
+        )
     }
 }
