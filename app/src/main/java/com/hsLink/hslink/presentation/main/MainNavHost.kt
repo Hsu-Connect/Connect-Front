@@ -10,6 +10,7 @@ import com.hsLink.hslink.presentation.community.navigation.write.communityWriteN
 import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
 import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.mypageNavGraph
+import com.hsLink.hslink.presentation.onboarding.navigation.onboardingNavGraph
 
 @Composable
 fun MainNavHost(
@@ -42,6 +43,11 @@ fun MainNavHost(
         communityPostNavGraph(
             padding = padding,
             navigateUp = navigator::navigateUp
+        )
+        onboardingNavGraph(
+            padding = padding,
+            navigateUp = navigator::navigateUp,
+            navigateHome = navigator::navigateToHome
         )
     }
 }
