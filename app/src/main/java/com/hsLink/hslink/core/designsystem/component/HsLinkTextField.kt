@@ -41,6 +41,7 @@ fun HsLinkTextField(
     backgroundColor: Color,
     onFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     imeAction: ImeAction = ImeAction.Done,
     onDoneAction: () -> Unit = {},
     focusRequester: FocusRequester = FocusRequester(),
@@ -66,7 +67,7 @@ fun HsLinkTextField(
             .focusRequester(focusRequester)
             .onFocusChanged { focusState -> onFocusChanged(focusState.isFocused) },
         singleLine = singleLine,
-        keyboardOptions = KeyboardOptions(imeAction = imeAction),
+        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
         keyboardActions = KeyboardActions(
             onDone = { onDoneAction() }
         ),
@@ -89,7 +90,7 @@ fun HsLinkTextField(
                         Text(
                             text = placeholder,
                             color = HsLinkTheme.colors.Grey300,
-                            style = HsLinkTheme.typography.body_16Normal
+                            style = HsLinkTheme.typography.caption_14Normal
                         )
                     }
                 }
