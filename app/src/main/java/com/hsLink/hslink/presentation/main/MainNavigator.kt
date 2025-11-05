@@ -16,12 +16,13 @@ import com.hsLink.hslink.presentation.home.navigation.navigateToHome
 import com.hsLink.hslink.presentation.home.navigation.navigateToSearch
 import com.hsLink.hslink.presentation.community.navigation.write.navigateToWriteCommunity
 import com.hsLink.hslink.presentation.mypage.navigation.navigateToMypage
+import com.hsLink.hslink.presentation.onboarding.navigation.Onboarding
 
 class MainNavigator(
     val navController: NavHostController,
 ) {
 
-    val startDestination = Home
+    val startDestination = Onboarding
 
     private val currentDestination: NavDestination?
         @Composable get() = navController
@@ -67,6 +68,10 @@ class MainNavigator(
 
     fun navigateToCommunityPost(postId: String, navOptions: NavOptions? = null) {
         navController.navigateToCommunityPost(postId, navOptions)
+    }
+
+    fun navigateToHome(navOptions: NavOptions? = null){
+        navController.navigateToHome(navOptions)
     }
 
     @Composable
