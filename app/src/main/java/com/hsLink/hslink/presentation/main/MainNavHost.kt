@@ -9,8 +9,8 @@ import com.hsLink.hslink.presentation.community.navigation.post.communityPostNav
 import com.hsLink.hslink.presentation.community.navigation.write.communityWriteNavGraph
 import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
 import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
-import com.hsLink.hslink.presentation.mypage.navigation.mypageNavGraph
-import com.hsLink.hslink.presentation.onboarding.navigation.onboardingNavGraph
+import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
+import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
 
 @Composable
 fun MainNavHost(
@@ -32,7 +32,10 @@ fun MainNavHost(
             navigateToWriting = navigator::navigateWriteCommunity,
             navigateToPost = navigator::navigateToCommunityPost
         )
-        mypageNavGraph(padding)
+        mypageNavGraph(
+            padding = padding,
+            navController = navigator.navController
+        )
 
         communityWriteNavGraph(
             padding = padding,
@@ -44,10 +47,10 @@ fun MainNavHost(
             padding = padding,
             navigateUp = navigator::navigateUp
         )
-        onboardingNavGraph(
+
+        profileEditNavGraph(
             padding = padding,
-            navigateUp = navigator::navigateUp,
-            navigateHome = navigator::navigateToHome
+            navigateUp = navigator::navigateUp
         )
     }
 }

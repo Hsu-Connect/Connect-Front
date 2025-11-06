@@ -1,4 +1,4 @@
-package com.hsLink.hslink.presentation.mypage.component
+package com.hsLink.hslink.presentation.mypage.component.profile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -24,12 +23,12 @@ import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 
 @Preview(showBackground = true)
 @Composable
-private fun MyPageDetailItemContentPreview() {
+private fun CareerCardPreview() {
     HsLinkTheme {
-        MyPageDetailItemContent(
-            name ="송효재",
-            title = "21학번 회계재무경영",
-            subtitle = "구직 중 · 재직 중 · 졸업",
+        CareerCard(
+            name = "투썸플레이스",
+            title = "영업",
+            dateRange = "2024.02 ~ 2024.10",  // ← 변경
             onClick = { }
         )
     }
@@ -44,20 +43,19 @@ data class MyPageDetailItemData(
 )
 
 @Composable
-fun MyPageDetailItemContent(
-    name : String,
+fun CareerCard(
+    name: String,
     title: String,
-    subtitle: String,
+    dateRange: String,  // ← subtitle 대신 dateRange
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         onClick = onClick,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 20.dp, horizontal = 16.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = HsLinkTheme.colors.SkyBlue100
+            containerColor = HsLinkTheme.colors.Common
         ),
         border = BorderStroke(
             width = 1.dp,
@@ -75,18 +73,19 @@ fun MyPageDetailItemContent(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = name,
+                    text = name,              // 투썸플레이스
                     color = Black,
                     style = HsLinkTheme.typography.title_20Strong
                 )
-                
+
                 Text(
-                    text = title,
+                    text = title,            // 영업
                     color = Black,
                     style = HsLinkTheme.typography.body_14Normal
                 )
+
                 Text(
-                    text = subtitle,
+                    text = dateRange,        // 2024.02 ~ 2024.10
                     color = HsLinkTheme.colors.Grey400,
                     style = HsLinkTheme.typography.btm_M
                 )
@@ -95,7 +94,7 @@ fun MyPageDetailItemContent(
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_mypage_item_lefrarrow),
                 contentDescription = null,
-                tint = Color.Black
+                tint = Black
             )
         }
     }

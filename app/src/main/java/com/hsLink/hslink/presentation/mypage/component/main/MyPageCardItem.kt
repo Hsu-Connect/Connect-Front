@@ -1,4 +1,4 @@
-package com.hsLink.hslink.presentation.mypage.component
+package com.hsLink.hslink.presentation.mypage.component.main
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
