@@ -42,6 +42,7 @@ import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.mypage.component.profile.CareerCard
 import com.hsLink.hslink.presentation.mypage.component.profile.SNSCard
 import com.hsLink.hslink.presentation.mypage.navigation.career.navigateToCareerEdit
+import com.hsLink.hslink.presentation.mypage.navigation.sns.navigateToSNSEdit
 
 enum class MajorType(val displayName: String) {
     ACCOUNTING("회계재무경영"),
@@ -79,6 +80,9 @@ fun ProfileEditScreenRoute(
         onCloseClick = onCloseClick,
         onCareerClick = {
             navController.navigateToCareerEdit()
+        },
+        onSNSClick = {
+            navController.navigateToSNSEdit()  // ← 추가
         }
     )
 }
@@ -91,6 +95,7 @@ fun ProfileEditScreen(
     onCloseClick: () -> Unit,
     onSaveClick: () -> Unit = {},
     onCareerClick: () -> Unit = {},
+    onSNSClick: () -> Unit = {},
 ) {
     var studentId by remember { mutableStateOf("") }
     var isStudentIdFocused by remember { mutableStateOf(false) }
@@ -353,9 +358,7 @@ fun ProfileEditScreen(
                 SNSCard(
                     title = "SNS",
                     content = "인스타그램",
-                    onClick = {
-                        // SNS 설정 화면으로 이동
-                    }
+                    onClick = onSNSClick
                 )
             }
         }

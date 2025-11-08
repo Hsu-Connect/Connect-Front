@@ -12,6 +12,7 @@ import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.career.careerNavGraph
+import com.hsLink.hslink.presentation.mypage.navigation.sns.snsNavGraph
 
 @Composable
 fun MainNavHost(
@@ -58,5 +59,10 @@ fun MainNavHost(
             padding = padding,
             navController = navigator.navController
         )
+        snsNavGraph(
+            padding = padding,
+            navController = navigator.navController
+        )
     }
+
 }
