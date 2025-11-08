@@ -17,11 +17,13 @@ fun NavController.navigateToProfileEdit(
 
 fun NavGraphBuilder.profileEditNavGraph(
     padding: PaddingValues,
+    navController: NavController,  // ← 추가
     navigateUp: () -> Unit,
 ) {
     composable<ProfileEdit> {
         ProfileEditScreenRoute(
             paddingValues = padding,
+            navController = navController,  // ← 추가
             onBackClick = navigateUp,
             onCloseClick = navigateUp
         )

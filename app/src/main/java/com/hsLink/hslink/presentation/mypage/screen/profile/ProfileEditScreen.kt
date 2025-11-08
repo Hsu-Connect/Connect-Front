@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkActionButton
 import com.hsLink.hslink.core.designsystem.component.HsLinkActionButtonSize
@@ -40,6 +41,7 @@ import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.mypage.component.profile.CareerCard
 import com.hsLink.hslink.presentation.mypage.component.profile.SNSCard
+import com.hsLink.hslink.presentation.mypage.navigation.career.navigateToCareerEdit
 
 enum class MajorType(val displayName: String) {
     ACCOUNTING("회계재무경영"),
@@ -67,13 +69,17 @@ private fun ProfileEditScreenPreview() {
 @Composable
 fun ProfileEditScreenRoute(
     paddingValues: PaddingValues,
+    navController: NavController,
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
 ) {
     ProfileEditScreen(
         paddingValues = paddingValues,
         onBackClick = onBackClick,
-        onCloseClick = onCloseClick
+        onCloseClick = onCloseClick,
+        onCareerClick = {
+            navController.navigateToCareerEdit()
+        }
     )
 }
 
@@ -84,6 +90,7 @@ fun ProfileEditScreen(
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
     onSaveClick: () -> Unit = {},
+    onCareerClick: () -> Unit = {},
 ) {
     var studentId by remember { mutableStateOf("") }
     var isStudentIdFocused by remember { mutableStateOf(false) }
@@ -284,7 +291,7 @@ fun ProfileEditScreen(
                         name = "투썸플레이스",
                         title = "영업",
                         dateRange = "2024.02 ~ 2024.10",  // ← subtitle을 dateRange로 변경
-                        onClick = { }
+                        onClick = onCareerClick
                     )
                 }
             }

@@ -11,6 +11,7 @@ import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
 import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
+import com.hsLink.hslink.presentation.mypage.navigation.career.careerNavGraph
 
 @Composable
 fun MainNavHost(
@@ -22,7 +23,6 @@ fun MainNavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
         modifier = modifier
-
     ) {
         homeNavGraph(padding)
         searchNavGraph(padding)
@@ -50,7 +50,13 @@ fun MainNavHost(
 
         profileEditNavGraph(
             padding = padding,
+            navController = navigator.navController,
             navigateUp = navigator::navigateUp
+        )
+
+        careerNavGraph(
+            padding = padding,
+            navController = navigator.navController
         )
     }
 }
