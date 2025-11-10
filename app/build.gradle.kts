@@ -11,16 +11,8 @@ plugins {
 
 }
 
-//val properties = Properties().apply {
-//    load(project.rootProject.file("local.properties").inputStream())
-//}
-
-
 val properties = Properties().apply {
-    val localPropertiesFile = project.rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        load(localPropertiesFile.inputStream())
-    }
+    load(project.rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -35,12 +27,9 @@ android {
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField(
-            "String",
-            "BASE_URL",
-            "\"${properties.getProperty("base.url", "https://default-url.com")}\""
-        )
-        //buildConfigField("String", "BASE_URL", properties["base.url"].toString())
+
+        buildConfigField("String", "BASE_URL", "\"${properties["base.url"]}\"")
+
     }
 
     buildTypes {
@@ -50,6 +39,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"${properties["base.url"]}\"")
         }
     }
     compileOptions {
