@@ -1,10 +1,10 @@
-package com.hsLink.hslink.data.repositoryimpl
+package com.hsLink.hslink.data.repositoryimpl.home
 
 import com.hsLink.hslink.data.dto.response.toEntity
 import com.hsLink.hslink.data.remote.datasourceimpl.PostDataSourceImpl
-import com.hsLink.hslink.domain.model.PostPopularEntity
-import com.hsLink.hslink.domain.model.PostPromotionEntity
-import com.hsLink.hslink.domain.repository.PostRepository
+import com.hsLink.hslink.domain.model.home.PostPopularEntity
+import com.hsLink.hslink.domain.model.home.PostPromotionEntity
+import com.hsLink.hslink.domain.repository.home.PostRepository
 import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
