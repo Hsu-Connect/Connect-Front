@@ -1,6 +1,7 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.BuildConfig
+import com.hsLink.hslink.data.service.commuunity.CommunityPostService
 import com.hsLink.hslink.data.service.home.PostService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -63,4 +64,9 @@ object NetworkModule {
     @Singleton
     fun providePostService(retrofit: Retrofit): PostService =
         retrofit.create(PostService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCommunityPostService(retrofit: Retrofit): CommunityPostService =
+        retrofit.create(CommunityPostService::class.java)
 }
