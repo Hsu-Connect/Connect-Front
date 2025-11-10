@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,17 +29,29 @@ private fun PreviewHomeCardItem() {
         HomeCardItem(
             userName = "John Doe",
             userMajor = "Computer Science",
+            userId = "20학번",
             userInfo = "Senior at XYZ University",
+            routeId = 1,
             modifier = Modifier
         )
     }
 }
 
+@Immutable
+data class HomePromotionPost(
+    val id: Int,
+    val title: String,
+    val summary: String,
+    val author: String,
+    val studentId: String,
+)
 @Composable
 fun HomeCardItem(
     userName: String,
     userMajor: String,
     userInfo: String,
+    userId: String,
+    routeId: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -72,12 +85,25 @@ fun HomeCardItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Text(
-                text = userInfo,
-                color = HsLinkTheme.colors.Grey400,
-                style = HsLinkTheme.typography.caption_12Normal, maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = userId,
+                    color = HsLinkTheme.colors.Grey400,
+                    style = HsLinkTheme.typography.caption_12Normal, maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = userInfo,
+                    color = HsLinkTheme.colors.Grey400,
+                    style = HsLinkTheme.typography.caption_12Normal, maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
