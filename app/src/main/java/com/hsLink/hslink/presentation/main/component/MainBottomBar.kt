@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +50,11 @@ fun MainBottomBar(
         Surface(
             color = Color.White,
         ) {
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = HsLinkTheme.colors.Grey100,
+            )
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -82,7 +87,7 @@ private fun MainNavigationBarItem(
     modifier: Modifier = Modifier,
 ) {
     val iconRes = if (selected) tab.selectedIcon else tab.unselectedIcon
-    val textColor = if (selected) Color.Black else Color.Gray
+    val textColor = if (selected) HsLinkTheme.colors.DeepBlue500 else HsLinkTheme.colors.Grey700
 
     Column(
         modifier = modifier
@@ -98,7 +103,8 @@ private fun MainNavigationBarItem(
         )
         Text(
             text = stringResource(tab.contentDescription),
-            style = MaterialTheme.typography.labelSmall
+            color = textColor,
+            style = HsLinkTheme.typography.caption_12Normal
         )
     }
 }
@@ -112,7 +118,7 @@ private fun MainBottomBarPreview() {
             isVisible = true,
             tabs = MainTab.entries.toImmutableList(),
             currentTab = currentTab,
-            onTabSelected = {  }
+            onTabSelected = { }
         )
     }
 }
