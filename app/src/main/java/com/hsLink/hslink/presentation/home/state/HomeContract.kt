@@ -1,8 +1,8 @@
 package com.hsLink.hslink.presentation.home.state
 
 import androidx.compose.runtime.Immutable
-import com.hsLink.hslink.domain.model.PostPopularEntity
-import com.hsLink.hslink.domain.model.PostPromotionEntity
+import com.hsLink.hslink.domain.model.home.PostPopularEntity
+import com.hsLink.hslink.domain.model.home.PostPromotionEntity
 
 @Immutable
 data class HomeContract (

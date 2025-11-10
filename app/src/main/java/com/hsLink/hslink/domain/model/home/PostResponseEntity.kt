@@ -1,6 +1,4 @@
-package com.hsLink.hslink.domain.model
-
-import kotlinx.serialization.SerialName
+package com.hsLink.hslink.domain.model.home
 
 data class PostPopularEntity (
     val id: Int,

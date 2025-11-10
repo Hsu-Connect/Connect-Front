@@ -68,7 +68,7 @@ fun HsLinkDialog(
                     Text(
                         text = dismissText,
                         color = HsLinkTheme.colors.Grey500,
-                        style = HsLinkTheme.typography.btm_M,
+                        style = HsLinkTheme.typography.btm_S,
                     )
                 }
 
@@ -86,7 +86,7 @@ fun HsLinkDialog(
                     Text(
                         text = confirmText,
                         color = HsLinkTheme.colors.Common,
-                        style = HsLinkTheme.typography.btm_M,
+                        style = HsLinkTheme.typography.btm_S,
                     )
                 }
             }

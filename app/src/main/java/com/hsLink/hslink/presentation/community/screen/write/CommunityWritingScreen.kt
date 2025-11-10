@@ -19,6 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsLink.hslink.R
@@ -117,7 +120,12 @@ fun CommunityWritingScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "게시판 선택",
+                    text = buildAnnotatedString {
+                        append("게시판 선택 ")
+                        withStyle(style = SpanStyle(color = HsLinkTheme.colors.Red500)) {
+                            append("*")
+                        }
+                    },
                     color = HsLinkTheme.colors.Grey700,
                     style = HsLinkTheme.typography.title_14Strong
                 )
@@ -140,7 +148,12 @@ fun CommunityWritingScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "제목",
+                    text = buildAnnotatedString {
+                        append("제목 ")
+                        withStyle(style = SpanStyle(color = HsLinkTheme.colors.Red500)) {
+                            append("*")
+                        }
+                    },
                     color = HsLinkTheme.colors.Grey700,
                     style = HsLinkTheme.typography.title_14Strong
                 )
@@ -170,7 +183,12 @@ fun CommunityWritingScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "내용",
+                    text = buildAnnotatedString {
+                        append("글 작성 ")
+                        withStyle(style = SpanStyle(color = HsLinkTheme.colors.Red500)) {
+                            append("*")
+                        }
+                    },
                     color = HsLinkTheme.colors.Grey700,
                     style = HsLinkTheme.typography.title_14Strong
                 )

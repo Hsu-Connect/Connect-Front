@@ -83,6 +83,7 @@ fun BoardSelectionField(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(HsLinkTheme.colors.Common)
+                .padding(horizontal = 16.dp)
         ) {
             BoardType.entries.forEach { board ->
                 DropdownMenuItem(

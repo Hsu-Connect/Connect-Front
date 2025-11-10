@@ -48,7 +48,7 @@ fun CommunityWriteButton(
             .fillMaxWidth()
             .background(backColor, shape = RoundedCornerShape(8.dp))
             .noRippleClickable(onClick = onClick)
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp, horizontal = 100.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

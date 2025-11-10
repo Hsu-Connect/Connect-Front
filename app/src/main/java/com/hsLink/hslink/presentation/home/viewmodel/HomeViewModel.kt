@@ -2,7 +2,7 @@ package com.hsLink.hslink.presentation.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hsLink.hslink.domain.repository.PostRepository
+import com.hsLink.hslink.domain.repository.home.PostRepository
 import com.hsLink.hslink.presentation.home.state.HomeContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
