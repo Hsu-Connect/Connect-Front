@@ -12,9 +12,11 @@ plugins {
 }
 
 val properties = Properties().apply {
-    load(project.rootProject.file("local.properties").inputStream())
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
-
 android {
     namespace = "com.hsLink.hslink"
     compileSdk = libs.versions.compileSdk.get().toInt()
