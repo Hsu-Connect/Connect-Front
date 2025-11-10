@@ -9,12 +9,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.hsLink.hslink.presentation.home.navigation.Home
 import com.hsLink.hslink.presentation.community.navigation.main.navigateToCommunity
 import com.hsLink.hslink.presentation.community.navigation.post.navigateToCommunityPost
+import com.hsLink.hslink.presentation.community.navigation.write.navigateToWriteCommunity
+import com.hsLink.hslink.presentation.home.navigation.Home
 import com.hsLink.hslink.presentation.home.navigation.navigateToHome
 import com.hsLink.hslink.presentation.home.navigation.navigateToSearch
-import com.hsLink.hslink.presentation.community.navigation.write.navigateToWriteCommunity
 import com.hsLink.hslink.presentation.mypage.navigation.main.navigateToMypage
 
 class MainNavigator(
@@ -67,6 +67,10 @@ class MainNavigator(
 
     fun navigateToCommunityPost(postId: String, navOptions: NavOptions? = null) {
         navController.navigateToCommunityPost(postId, navOptions)
+    }
+
+    fun navigateToHome(navOptions: NavOptions? = null) {
+        navController.navigateToHome(navOptions)
     }
 
     @Composable

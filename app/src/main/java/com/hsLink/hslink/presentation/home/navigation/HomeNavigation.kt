@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.hsLink.hslink.core.navigation.MainTabRoute
-import com.hsLink.hslink.presentation.home.HomeRoute
+import com.hsLink.hslink.presentation.home.screen.HomeRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {

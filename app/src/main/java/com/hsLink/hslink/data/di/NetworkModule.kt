@@ -1,6 +1,7 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.BuildConfig
+import com.hsLink.hslink.data.service.home.PostService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -12,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -49,9 +51,16 @@ object NetworkModule {
     fun providesRetrofit(
         client: OkHttpClient,
         converterFactory: Converter.Factory,
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(converterFactory)
-        .client(client)
-        .build()
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(converterFactory)
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePostService(retrofit: Retrofit): PostService =
+        retrofit.create(PostService::class.java)
 }
