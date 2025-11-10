@@ -1,7 +1,7 @@
 package com.hsLink.hslink.data.dto.response
 
-import com.hsLink.hslink.domain.model.PostPopularEntity
-import com.hsLink.hslink.domain.model.PostPromotionEntity
+import com.hsLink.hslink.domain.model.home.PostPopularEntity
+import com.hsLink.hslink.domain.model.home.PostPromotionEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
