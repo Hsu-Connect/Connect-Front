@@ -11,6 +11,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,18 +29,17 @@ private fun HomePostContainerPreview() {
     HsLinkTheme {
         HomePostContainer(
             posts = listOf(
-                HomePost(id = "1", title = "2026 카카오 신입 공채", route = "route1"),
-                HomePost(id = "2", title = "선배가 알려주는 이력서 꿀팁", route = "route2")
+                HomePost(id = "1", title = "2026 카카오 신입 공채"),
+                HomePost(id = "2", title = "선배가 알려주는 이력서 꿀팁")
             ),
             onPostClick = {}
         )
     }
 }
-
+@Immutable
 data class HomePost(
     val id: String,
     val title: String,
-    val route: String,
 )
 
 @Composable
