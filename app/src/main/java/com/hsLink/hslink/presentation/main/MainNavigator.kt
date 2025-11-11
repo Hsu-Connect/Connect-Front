@@ -14,7 +14,7 @@ import com.hsLink.hslink.presentation.community.navigation.post.navigateToCommun
 import com.hsLink.hslink.presentation.community.navigation.write.navigateToWriteCommunity
 import com.hsLink.hslink.presentation.home.navigation.Home
 import com.hsLink.hslink.presentation.home.navigation.navigateToHome
-import com.hsLink.hslink.presentation.home.navigation.navigateToSearch
+import com.hsLink.hslink.presentation.search.navigation.navigateToSearch
 import com.hsLink.hslink.presentation.mypage.navigation.main.navigateToMypage
 
 class MainNavigator(

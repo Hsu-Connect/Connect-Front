@@ -8,7 +8,7 @@ import com.hsLink.hslink.presentation.community.navigation.main.communityNavGrap
 import com.hsLink.hslink.presentation.community.navigation.post.communityPostNavGraph
 import com.hsLink.hslink.presentation.community.navigation.write.communityWriteNavGraph
 import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
-import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
+import com.hsLink.hslink.presentation.search.navigation.searchNavGraph
 import com.hsLink.hslink.presentation.login.navigation.loginNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
@@ -34,7 +34,13 @@ fun MainNavHost(
         )
 
         homeNavGraph(padding)
-        searchNavGraph(padding)
+
+        searchNavGraph(
+            paddingValues = padding,  // padding -> paddingValues
+            onNavigateToProfile = { userId ->
+                println("Navigate to profile: $userId")
+            }
+        )
         communityNavGraph(
             padding,
             navigateUp = navigator::navigateUp,

@@ -3,7 +3,7 @@ package com.hsLink.hslink.data.dto.response
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SocialLoginResponse(
+data class SocialLoginResponseDto(
     val accessToken: String,
     val refreshToken: String,
     val isNewUser: Boolean,
