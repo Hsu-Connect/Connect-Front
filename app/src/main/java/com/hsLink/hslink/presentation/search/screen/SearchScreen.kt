@@ -2,16 +2,21 @@ package com.hsLink.hslink.presentation.search.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
+import com.hsLink.hslink.domain.model.search.MentorEntity
 import com.hsLink.hslink.presentation.search.component.SearchUserItems
 import com.hsLink.hslink.presentation.search.state.SearchIntent
 import com.hsLink.hslink.presentation.search.state.SearchSideEffect
@@ -35,11 +41,43 @@ import com.hsLink.hslink.presentation.search.viewmodel.SearchViewModel
 
 @Composable
 @Preview(showBackground = true)
-fun SearchScreenPreview() {
-    SearchScreen(
-        paddingValues = PaddingValues(),
-        onNavigateToProfile = {}
-    )
+private fun SearchScreenPreview() {
+    HsLinkTheme {
+        SearchScreen(
+            paddingValues = PaddingValues(),
+            uiState = SearchUiState(
+                isLoading = false,
+                totalMentorCount = 13564,
+                mentors = listOf(
+                    MentorEntity(
+                        userId = 1L,
+                        name = "송효재",
+                        major = "회계재무경영",
+                        jobSeeking = true,
+                        employed = false,
+                        academicStatus = "GRADUATED"
+                    ),
+                    MentorEntity(
+                        userId = 2L,
+                        name = "김민수",
+                        major = "컴퓨터공학과",
+                        jobSeeking = false,
+                        employed = true,
+                        academicStatus = "ENROLLED"
+                    ),
+                    MentorEntity(
+                        userId = 3L,
+                        name = "박지영",
+                        major = "경영학과",
+                        jobSeeking = true,
+                        employed = true,
+                        academicStatus = "GRADUATED"
+                    )
+                )
+            ),
+            onNavigateToProfile = {}
+        )
+    }
 }
 
 @Composable
@@ -105,21 +143,42 @@ fun SearchScreen(
                 rightIconFirst = null,
                 rightIconSecond = null,
                 leftIcon = null
+
             )
-            Column {
-                Text(
-                    text = "멘토링을 받고 싶은\n한성인을 찾아보세요",
-                    color = HsLinkTheme.colors.DeepBlue500,
-                    style = HsLinkTheme.typography.title_24Strong
-                )
-                Text("전체 ${uiState.totalMentorCount}명")
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = HsLinkTheme.colors.Grey100
+            )
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "멘토링을 받고 싶은\n한성인을 찾아보세요",
+                        color = HsLinkTheme.colors.DeepBlue500,
+                        style = HsLinkTheme.typography.title_24Strong,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Text(
+                        text = "전체 ${uiState.totalMentorCount}명",
+                        color = HsLinkTheme.colors.Grey600,
+                        style = HsLinkTheme.typography.body_16Normal
+                    )
+                }
             }
         }
 
         if (uiState.isLoading && uiState.mentors.isEmpty()) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -133,7 +192,7 @@ fun SearchScreen(
         ) { mentor ->
             SearchUserItems(
                 name = mentor.name,
-                title = "${mentor.major}",
+                title = mentor.major,  // 학번 없이 전공만
                 subtitle = buildStatusText(mentor.jobSeeking, mentor.employed, mentor.academicStatus),
                 onClick = { onIntent(SearchIntent.NavigateToProfile(mentor.userId)) }
             )
@@ -142,7 +201,9 @@ fun SearchScreen(
         if (uiState.isLoadingMore) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

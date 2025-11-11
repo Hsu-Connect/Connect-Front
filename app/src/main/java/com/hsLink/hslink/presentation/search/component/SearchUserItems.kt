@@ -54,7 +54,7 @@ fun SearchUserItems(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 0.dp, horizontal = 0.dp),
+            .padding(vertical = 4.dp, horizontal = 16.dp),
         colors = CardDefaults.cardColors(
             containerColor = HsLinkTheme.colors.Common
         ),
