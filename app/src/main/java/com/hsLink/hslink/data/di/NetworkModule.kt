@@ -2,6 +2,7 @@ package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.BuildConfig
 import com.hsLink.hslink.data.service.home.PostService
+import com.hsLink.hslink.data.service.login.AuthService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -63,4 +64,10 @@ object NetworkModule {
     @Singleton
     fun providePostService(retrofit: Retrofit): PostService =
         retrofit.create(PostService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
+    }
 }

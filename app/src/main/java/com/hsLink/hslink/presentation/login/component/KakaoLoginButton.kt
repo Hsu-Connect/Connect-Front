@@ -1,5 +1,6 @@
 package com.hsLink.hslink.presentation.login.component
 
+import android.R.attr.enabled
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.R
 import androidx.compose.foundation.layout.Row
@@ -21,10 +22,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun KakaoLoginButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFFFEE500), // 카카오 노란색
             contentColor = Color.Black          // 텍스트 및 아이콘 색상
