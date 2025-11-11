@@ -15,6 +15,7 @@ import com.hsLink.hslink.presentation.community.navigation.write.navigateToWrite
 import com.hsLink.hslink.presentation.home.navigation.Home
 import com.hsLink.hslink.presentation.home.navigation.navigateToHome
 import com.hsLink.hslink.presentation.search.navigation.navigateToSearch
+import com.hsLink.hslink.presentation.search.navigation.navigateToProfile
 import com.hsLink.hslink.presentation.mypage.navigation.main.navigateToMypage
 
 class MainNavigator(
@@ -26,7 +27,6 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
-
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tabRoute ->
@@ -71,6 +71,10 @@ class MainNavigator(
 
     fun navigateToHome(navOptions: NavOptions? = null) {
         navController.navigateToHome(navOptions)
+    }
+
+    fun navigateToProfile(userId: Long, navOptions: NavOptions? = null) {
+        navController.navigateToProfile(userId, navOptions)
     }
 
     @Composable

@@ -14,6 +14,7 @@ import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.career.careerNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.sns.snsNavGraph
+import com.hsLink.hslink.presentation.search.navigation.profileNavGraph
 
 @Composable
 fun MainNavHost(
@@ -36,11 +37,17 @@ fun MainNavHost(
         homeNavGraph(padding)
 
         searchNavGraph(
-            paddingValues = padding,  // padding -> paddingValues
+            paddingValues = padding,
             onNavigateToProfile = { userId ->
-                println("Navigate to profile: $userId")
+                navigator.navigateToProfile(userId)
             }
         )
+
+        profileNavGraph(
+            paddingValues = padding,
+            onNavigateBack = { navigator.navigateUp() }
+        )
+
         communityNavGraph(
             padding,
             navigateUp = navigator::navigateUp,
