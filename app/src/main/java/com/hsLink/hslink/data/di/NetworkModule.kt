@@ -1,6 +1,7 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.BuildConfig
+import com.hsLink.hslink.data.service.commuunity.CommunityPostService
 import com.hsLink.hslink.data.service.home.PostService
 import com.hsLink.hslink.data.service.login.AuthService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -70,4 +71,6 @@ object NetworkModule {
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
     }
+    fun provideCommunityPostService(retrofit: Retrofit): CommunityPostService =
+        retrofit.create(CommunityPostService::class.java)
 }

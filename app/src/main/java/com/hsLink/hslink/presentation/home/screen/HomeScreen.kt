@@ -101,7 +101,8 @@ fun HomeScreen(
     ) {
         item {
             HsLinkTopBar(
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(start = 12.dp),
                 title = {
                     Image(
                         painter = painterResource(id = R.drawable.img_home_logo),

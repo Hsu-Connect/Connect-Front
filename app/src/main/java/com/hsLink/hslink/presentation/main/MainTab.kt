@@ -18,29 +18,29 @@ enum class MainTab(
 ) {
 
     HOME(
-        selectedIcon = R.drawable.ic_mypage,
-        unselectedIcon = R.drawable.ic_mypage,
-        contentDescription =R.string.bottom_navigation_item_home,
+        selectedIcon = R.drawable.ic_bottombar_home_on,
+        unselectedIcon = R.drawable.ic_bottombar_home_off,
+        contentDescription = R.string.bottom_navigation_item_home,
         route = Home
     ),
 
     SEARCH(
-        selectedIcon = R.drawable.ic_mypage,
-        unselectedIcon = R.drawable.ic_mypage,
+        selectedIcon = R.drawable.ic_bottombar_search_on,
+        unselectedIcon = R.drawable.ic_bottombar_search_off,
         contentDescription = R.string.bottom_navigation_item_search,
         route = Search
     ),
 
     COMMUNITY(
-        selectedIcon = R.drawable.ic_mypage,
-        unselectedIcon = R.drawable.ic_mypage,
+        selectedIcon = R.drawable.ic_bottombar_community_on,
+        unselectedIcon = R.drawable.ic_bottombar_community_off,
         contentDescription = R.string.bottom_navigation_item_community,
         route = Community
     ),
 
     MYPAGE(
-        selectedIcon = R.drawable.ic_mypage,
-        unselectedIcon = R.drawable.ic_mypage,
+        selectedIcon = R.drawable.ic_bottombar_mypage_on,
+        unselectedIcon = R.drawable.ic_bottombar_mypage_off,
         contentDescription = R.string.bottom_navigation_item_mypage,
         route = Mypage
     );

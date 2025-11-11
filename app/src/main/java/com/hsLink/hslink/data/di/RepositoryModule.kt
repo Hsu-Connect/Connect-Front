@@ -1,11 +1,13 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.data.repositoryimpl.AuthRepositoryImpl
+import com.hsLink.hslink.data.repositoryimpl.CommunityRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.DummyRepositoryImpl
-import com.hsLink.hslink.data.repositoryimpl.PostRepositoryImpl
+import com.hsLink.hslink.data.repositoryimpl.home.PostRepositoryImpl
 import com.hsLink.hslink.domain.DummyRepository
 import com.hsLink.hslink.domain.repository.AuthRepository
-import com.hsLink.hslink.domain.repository.PostRepository
+import com.hsLink.hslink.domain.repository.community.CommunityRepository
+import com.hsLink.hslink.domain.repository.home.PostRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -31,5 +33,8 @@ interface RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+    fun bindsCommunityPostRepository(
+        communityPostRepositoryImpl: CommunityRepositoryImpl,
+    ): CommunityRepository
 
 }
