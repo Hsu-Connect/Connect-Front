@@ -88,4 +88,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
 
+    // KaKao
+    implementation("com.kakao.sdk:v2-user:2.20.1")
+
 }

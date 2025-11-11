@@ -3,6 +3,7 @@ package com.hsLink.hslink.data.di
 import com.hsLink.hslink.BuildConfig
 import com.hsLink.hslink.data.service.commuunity.CommunityPostService
 import com.hsLink.hslink.data.service.home.PostService
+import com.hsLink.hslink.data.service.login.AuthService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -65,6 +65,11 @@ object NetworkModule {
     fun providePostService(retrofit: Retrofit): PostService =
         retrofit.create(PostService::class.java)
 
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
+    }
     @Provides
     @Singleton
     fun provideCommunityPostService(retrofit: Retrofit): CommunityPostService =

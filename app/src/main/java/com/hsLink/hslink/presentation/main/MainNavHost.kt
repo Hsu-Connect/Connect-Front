@@ -9,6 +9,7 @@ import com.hsLink.hslink.presentation.community.navigation.post.communityPostNav
 import com.hsLink.hslink.presentation.community.navigation.write.communityWriteNavGraph
 import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
 import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
+import com.hsLink.hslink.presentation.login.navigation.loginNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.career.careerNavGraph
@@ -25,6 +26,13 @@ fun MainNavHost(
         startDestination = navigator.startDestination,
         modifier = modifier
     ) {
+
+        loginNavGraph(
+            padding = padding,
+            onNavigateToMain = { navigator.navigateToHome() },
+            onNavigateToOnboarding = { navigator.navigateToHome() }
+        )
+
         homeNavGraph(padding)
         searchNavGraph(padding)
         communityNavGraph(
