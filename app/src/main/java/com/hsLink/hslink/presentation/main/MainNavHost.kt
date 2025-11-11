@@ -8,12 +8,13 @@ import com.hsLink.hslink.presentation.community.navigation.main.communityNavGrap
 import com.hsLink.hslink.presentation.community.navigation.post.communityPostNavGraph
 import com.hsLink.hslink.presentation.community.navigation.write.communityWriteNavGraph
 import com.hsLink.hslink.presentation.home.navigation.homeNavGraph
-import com.hsLink.hslink.presentation.home.navigation.searchNavGraph
+import com.hsLink.hslink.presentation.search.navigation.searchNavGraph
 import com.hsLink.hslink.presentation.login.navigation.loginNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.main.mypageNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.profile.profileEditNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.career.careerNavGraph
 import com.hsLink.hslink.presentation.mypage.navigation.sns.snsNavGraph
+import com.hsLink.hslink.presentation.search.navigation.profileNavGraph
 
 @Composable
 fun MainNavHost(
@@ -34,7 +35,19 @@ fun MainNavHost(
         )
 
         homeNavGraph(padding)
-        searchNavGraph(padding)
+
+        searchNavGraph(
+            paddingValues = padding,
+            onNavigateToProfile = { userId ->
+                navigator.navigateToProfile(userId)
+            }
+        )
+
+        profileNavGraph(
+            paddingValues = padding,
+            onNavigateBack = { navigator.navigateUp() }
+        )
+
         communityNavGraph(
             padding,
             navigateUp = navigator::navigateUp,

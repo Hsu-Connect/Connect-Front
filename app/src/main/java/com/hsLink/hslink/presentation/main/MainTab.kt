@@ -7,7 +7,7 @@ import com.hsLink.hslink.R
 import com.hsLink.hslink.core.navigation.MainTabRoute
 import com.hsLink.hslink.presentation.community.navigation.main.Community
 import com.hsLink.hslink.presentation.home.navigation.Home
-import com.hsLink.hslink.presentation.home.navigation.Search
+import com.hsLink.hslink.presentation.search.navigation.Search
 import com.hsLink.hslink.presentation.mypage.navigation.main.Mypage
 
 enum class MainTab(

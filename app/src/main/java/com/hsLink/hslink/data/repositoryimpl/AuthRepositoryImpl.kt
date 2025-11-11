@@ -1,7 +1,7 @@
 package com.hsLink.hslink.data.repositoryimpl
 
-import com.hsLink.hslink.data.dto.request.SocialLoginRequest
-import com.hsLink.hslink.data.dto.response.SocialLoginResponse
+import com.hsLink.hslink.data.dto.request.SocialLoginRequestDto
+import com.hsLink.hslink.data.dto.response.SocialLoginResponseDto
 import com.hsLink.hslink.data.service.login.AuthService
 import com.hsLink.hslink.domain.repository.AuthRepository
 import javax.inject.Inject
@@ -13,9 +13,9 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun loginWithSocialToken(
         provider: String,
         accessToken: String
-    ): Result<SocialLoginResponse> {
+    ): Result<SocialLoginResponseDto> {
         return try {
-            val request = SocialLoginRequest(provider, accessToken)
+            val request = SocialLoginRequestDto(provider, accessToken)
             val response = authService.socialLogin(request)
 
             if (response.isSuccessful) {

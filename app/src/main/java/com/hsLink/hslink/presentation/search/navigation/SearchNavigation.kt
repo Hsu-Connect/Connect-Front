@@ -1,4 +1,4 @@
-package com.hsLink.hslink.presentation.home.navigation
+package com.hsLink.hslink.presentation.search.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.hsLink.hslink.core.navigation.MainTabRoute
-import com.hsLink.hslink.presentation.search.SearchRoute
+import com.hsLink.hslink.presentation.search.screen.SearchRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
@@ -14,10 +14,14 @@ fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.searchNavGraph(
-    padding: PaddingValues,
+    paddingValues: PaddingValues,
+    onNavigateToProfile: (Long) -> Unit = {}
 ) {
     composable<Search> {
-        SearchRoute(padding)
+        SearchRoute(
+            paddingValues = paddingValues,
+            onNavigateToProfile = onNavigateToProfile
+        )
     }
 }
 
