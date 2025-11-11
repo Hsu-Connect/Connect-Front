@@ -15,7 +15,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -71,6 +70,8 @@ object NetworkModule {
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
     }
+    @Provides
+    @Singleton
     fun provideCommunityPostService(retrofit: Retrofit): CommunityPostService =
         retrofit.create(CommunityPostService::class.java)
 }

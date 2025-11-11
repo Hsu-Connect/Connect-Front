@@ -30,11 +30,12 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindAuthRepository(
+    fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
     fun bindsCommunityPostRepository(
         communityPostRepositoryImpl: CommunityRepositoryImpl,
     ): CommunityRepository
-
 }
