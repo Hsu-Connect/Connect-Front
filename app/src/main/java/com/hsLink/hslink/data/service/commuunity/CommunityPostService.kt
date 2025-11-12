@@ -2,11 +2,13 @@ package com.hsLink.hslink.data.service.commuunity
 
 import com.hsLink.hslink.core.network.BaseResponse
 import com.hsLink.hslink.data.dto.request.community.PostRequestDto
+import com.hsLink.hslink.data.dto.response.community.CommunityDetailResponseDto
 import com.hsLink.hslink.data.dto.response.community.CommunityListResponseDto
 import com.hsLink.hslink.data.dto.response.community.CommunityPostResponseDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommunityPostService {
@@ -20,4 +22,9 @@ interface CommunityPostService {
         @Query("type") type: String,
         @Query("page") page: Int,
     ): BaseResponse<CommunityListResponseDto>
+
+    @GET("posts/{postId}")
+    suspend fun getCommunityDetail(
+        @Path("postId") postId: Int,
+    ): BaseResponse<CommunityDetailResponseDto>
 }
