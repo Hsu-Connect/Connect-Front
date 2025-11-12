@@ -41,6 +41,9 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew test
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
       - name: Upload test reports
         if: always()
