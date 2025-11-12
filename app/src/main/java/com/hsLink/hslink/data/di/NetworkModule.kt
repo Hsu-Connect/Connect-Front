@@ -5,6 +5,7 @@ import com.hsLink.hslink.data.remote.AuthInterceptor
 import com.hsLink.hslink.data.service.commuunity.CommunityPostService
 import com.hsLink.hslink.data.service.home.PostService
 import com.hsLink.hslink.data.service.login.AuthService
+import com.hsLink.hslink.data.service.onboarding.OnboardingService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -68,5 +69,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOnboardingService(retrofit: Retrofit): OnboardingService {
+        return retrofit.create(OnboardingService::class.java)
     }
 }
