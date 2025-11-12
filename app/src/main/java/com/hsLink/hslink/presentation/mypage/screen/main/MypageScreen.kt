@@ -89,19 +89,6 @@ fun MypageScreen(
         }
 
         item {
-            MyPageCardItemContainer(
-                text = "마이페이지",
-                items = listOf(
-                    MyPageItemData(id = "1", title = "나의 게시글", route = "/posts"),
-                    MyPageItemData(id = "2", title = "나의 댓글", route = "/settings")
-                ),
-                onItemClick = { item ->
-                    // 클릭 처리
-                }
-            )
-        }
-
-        item {
             Spacer(modifier = Modifier.height(24.dp))
         }
 
