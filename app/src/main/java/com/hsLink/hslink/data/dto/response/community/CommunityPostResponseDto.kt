@@ -1,4 +1,4 @@
-package com.hsLink.hslink.data.dto.response
+package com.hsLink.hslink.data.dto.response.community
 
 import com.hsLink.hslink.domain.model.community.CommunityPostResponseEntity
 import kotlinx.serialization.SerialName
