@@ -1,4 +1,4 @@
-package com.hsLink.hslink.data.dto.request
+package com.hsLink.hslink.data.dto.request.community
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

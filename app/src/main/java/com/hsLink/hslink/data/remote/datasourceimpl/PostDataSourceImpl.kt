@@ -1,8 +1,8 @@
 package com.hsLink.hslink.data.remote.datasourceimpl
 
 import com.hsLink.hslink.core.network.BaseResponse
-import com.hsLink.hslink.data.dto.response.PostPromotionDto
-import com.hsLink.hslink.data.dto.response.PostResponseDto
+import com.hsLink.hslink.data.dto.response.home.PostPromotionDto
+import com.hsLink.hslink.data.dto.response.home.PostResponseDto
 import com.hsLink.hslink.data.remote.datasource.PostDataSource
 import com.hsLink.hslink.data.service.home.PostService
 import javax.inject.Inject
