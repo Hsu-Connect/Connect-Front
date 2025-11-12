@@ -1,5 +1,6 @@
 package com.hsLink.hslink.presentation.mypage.screen.profile
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,6 +19,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +33,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkActionButton
@@ -39,10 +43,12 @@ import com.hsLink.hslink.core.designsystem.component.HsLinkSelectButton
 import com.hsLink.hslink.core.designsystem.component.HsLinkTextField
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
+import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
 import com.hsLink.hslink.presentation.mypage.component.profile.CareerCard
 import com.hsLink.hslink.presentation.mypage.component.profile.SNSCard
 import com.hsLink.hslink.presentation.mypage.navigation.career.navigateToCareerEdit
 import com.hsLink.hslink.presentation.mypage.navigation.sns.navigateToSNSEdit
+import com.hsLink.hslink.presentation.mypage.viewmodel.MypageViewModel
 
 enum class MajorType(val displayName: String) {
     ACCOUNTING("회계재무경영"),
@@ -54,6 +60,8 @@ enum class MajorType(val displayName: String) {
     VIDEO("영상디자인"),
     BRAND("브랜드 디자인"),
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -67,22 +75,41 @@ private fun ProfileEditScreenPreview() {
     }
 }
 
+// ProfileEditScreenRoute 수정
 @Composable
 fun ProfileEditScreenRoute(
     paddingValues: PaddingValues,
     navController: NavController,
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
+    viewModel: MypageViewModel = hiltViewModel() // <- ViewModel 추가
 ) {
+    val userProfile by viewModel.userProfile.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
     ProfileEditScreen(
         paddingValues = paddingValues,
+        userProfile = userProfile, // <- 기존 데이터 전달
+        isLoading = isLoading,
         onBackClick = onBackClick,
         onCloseClick = onCloseClick,
+        onSaveClick = { studentNumber, name, major, mentor, jobSeeking ->
+            // ViewModel의 updateProfile 호출
+            viewModel.updateProfile(
+                studentNumber = studentNumber,
+                name = name,
+                major = major,
+                mentor = mentor,
+                jobSeeking = jobSeeking
+            )
+            // 저장 후 뒤로 가기
+            onBackClick()
+        },
         onCareerClick = {
             navController.navigateToCareerEdit()
         },
         onSNSClick = {
-            navController.navigateToSNSEdit()  // ← 추가
+            navController.navigateToSNSEdit()
         }
     )
 }
@@ -91,12 +118,15 @@ fun ProfileEditScreenRoute(
 fun ProfileEditScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
+    userProfile: MyPageUserProfileDto? = null,  // <- 추가
+    isLoading: Boolean = false,                 // <- 추가
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
-    onSaveClick: () -> Unit = {},
+    onSaveClick: (String?, String?, String?, Boolean?, Boolean?) -> Unit = { _, _, _, _, _ -> },
     onCareerClick: () -> Unit = {},
     onSNSClick: () -> Unit = {},
 ) {
+
     var studentId by remember { mutableStateOf("") }
     var isStudentIdFocused by remember { mutableStateOf(false) }
 
@@ -110,6 +140,19 @@ fun ProfileEditScreen(
     var selectedMentorType by remember { mutableStateOf("") }
 
     var selectedJobStatus by remember { mutableStateOf("") }
+
+    // userProfile이 변경될 때마다 상태 업데이트
+    LaunchedEffect(userProfile) {
+        Log.d("ProfileEditScreen", "LaunchedEffect 실행: ${userProfile?.name}")
+        userProfile?.let { profile ->
+            studentId = profile.studentNumber
+            name = profile.name
+            selectedMajor = profile.major
+            selectedMentorType = if (profile.mentor) "mentor" else "mentee"
+            selectedJobStatus = if (profile.jobSeeking) "seeking" else "not_seeking"
+            Log.d("ProfileEditScreen", "상태 업데이트 완료: $name")
+        }
+    }
 
     fun isFormValid(): Boolean {
         return studentId.isNotEmpty() &&
@@ -162,7 +205,11 @@ fun ProfileEditScreen(
                 HsLinkTextField(
                     value = studentId,
                     placeholder = "21311114",
-                    onValueChanged = { studentId = it },
+                    onValueChanged = {
+                        if (it.length <= 10) {  // <- 길이 제한
+                            studentId = it
+                        }
+                    },
                     borderColor = if (isStudentIdFocused) {
                         HsLinkTheme.colors.DeepBlue500
                     } else {
@@ -327,7 +374,7 @@ fun ProfileEditScreen(
                             selectedMentorType = "mentor"
                         },
                         size = HsLinkButtonSize.Large,
-                        isSelected = selectedMentorType == "",
+                        isSelected = selectedMentorType == "mentor",
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -389,7 +436,7 @@ fun ProfileEditScreen(
                             selectedJobStatus = "seeking"
                         },
                         size = HsLinkButtonSize.Large,
-                        isSelected = selectedJobStatus == "",
+                        isSelected = selectedJobStatus == "seeking",
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -409,8 +456,22 @@ fun ProfileEditScreen(
             HsLinkActionButton(
                 label = "수정완료",
                 onClick = {
-                    // 수정 완료 로직
-                    onSaveClick()
+                    // 실제 값들 전달
+                    onSaveClick(
+                        studentId.takeIf { it.isNotEmpty() },
+                        name.takeIf { it.isNotEmpty() },
+                        selectedMajor.takeIf { it.isNotEmpty() },
+                        when(selectedMentorType) {
+                            "mentor" -> true
+                            "mentee" -> false
+                            else -> null
+                        },
+                        when(selectedJobStatus) {
+                            "seeking" -> true
+                            "not_seeking" -> false
+                            else -> null
+                        }
+                    )
                 },
                 size = HsLinkActionButtonSize.Large,
                 isEnabled = isFormValid(), // ← 폼 유효성 검사

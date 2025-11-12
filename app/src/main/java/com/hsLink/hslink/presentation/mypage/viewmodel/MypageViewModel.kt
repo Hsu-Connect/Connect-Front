@@ -4,6 +4,7 @@ package com.hsLink.hslink.presentation.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hsLink.hslink.data.dto.request.mypage.UpdateProfileRequestDto
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
 import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
 import com.hsLink.hslink.domain.repository.mypage.MypageRepository
@@ -44,6 +45,30 @@ class MypageViewModel @Inject constructor(
                 }
                 .onFailure { exception ->
                     Log.e("MypageViewModel", "API 실패: ${exception.message}") // <- 로그 추가
+                    _error.value = exception.message
+                }
+            _isLoading.value = false
+        }
+    }
+
+    fun updateProfile(
+        studentNumber: String? = null,
+        name: String? = null,
+        major: String? = null,
+        mentor: Boolean? = null,
+        jobSeeking: Boolean? = null
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val request = UpdateProfileRequestDto(studentNumber, name, major, mentor, jobSeeking)
+            mypageRepository.updateProfile(request)
+                .onSuccess {
+                    Log.d("MypageViewModel", "프로필 수정 성공")
+                    // 수정 후 다시 조회
+                    getUserProfile()
+                }
+                .onFailure { exception ->
+                    Log.e("MypageViewModel", "프로필 수정 실패: ${exception.message}")
                     _error.value = exception.message
                 }
             _isLoading.value = false
