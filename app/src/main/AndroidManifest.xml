@@ -36,7 +36,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- 실제 네이티브 앱 키 사용 -->
-                <data android:host="oauth" android:scheme="kakaoa0bbd28c9384baa131a731d1b914307c" />
+                <data android:host="oauth" android:scheme="kakao${kakaoAppKey}" />
             </intent-filter>
         </activity>
 

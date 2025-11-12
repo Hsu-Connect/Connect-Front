@@ -31,6 +31,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "BASE_URL", "\"${properties["base.url"]}\"")
+        manifestPlaceholders["kakaoAppKey"] = properties["kakao.native.app.key"] as String
 
     }
 
@@ -90,5 +91,12 @@ dependencies {
 
     // KaKao
     implementation("com.kakao.sdk:v2-user:2.20.1")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Paging3
+    implementation("androidx.paging:paging-runtime-ktx:3.3.0")
+    implementation("androidx.paging:paging-compose:3.3.0")
 
 }
