@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.hsLink.hslink.data.dto.request.community.PostRequestDto
+import com.hsLink.hslink.data.dto.response.community.CommunityDetailResponseDto
 import com.hsLink.hslink.data.dto.response.community.CommunityPostResponseDto
 import com.hsLink.hslink.data.paging.CommunityPagingSource
 import com.hsLink.hslink.data.service.commuunity.CommunityPostService
@@ -31,4 +32,14 @@ class CommunityRepositoryImpl @Inject constructor(
             pagingSourceFactory = { CommunityPagingSource(communityPostService, type) }
         ).flow
     }
+
+    override suspend fun getCommunityDetail(postId: Int): Result<CommunityDetailResponseDto> =
+        runCatching {
+            val response = communityPostService.getCommunityDetail(postId)
+            if (response.isSuccess) {
+                response.result
+            } else {
+                throw Exception(response.message)
+            }
+        }
 }

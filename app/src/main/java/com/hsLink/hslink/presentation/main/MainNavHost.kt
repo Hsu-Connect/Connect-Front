@@ -51,7 +51,7 @@ fun MainNavHost(
         communityNavGraph(
             padding = padding,
             navigateToWriteCommunity = navigator::navigateWriteCommunity,
-            navigateToPost = { postId -> navigator.navigateToCommunityPost(postId.toString()) },
+            navigateToPost = { postId -> navigator.navigateToCommunityPost(postId) },
         )
         
         mypageNavGraph(

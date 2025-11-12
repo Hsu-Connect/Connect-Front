@@ -65,7 +65,7 @@ class MainNavigator(
         navController.navigateToCommunity(navOptions)
     }
 
-    fun navigateToCommunityPost(postId: String, navOptions: NavOptions? = null) {
+    fun navigateToCommunityPost(postId: Int, navOptions: NavOptions? = null) {
         navController.navigateToCommunityPost(postId, navOptions)
     }
 
