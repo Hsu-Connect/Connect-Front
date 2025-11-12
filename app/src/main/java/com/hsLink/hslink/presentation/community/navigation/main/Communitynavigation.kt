@@ -15,16 +15,14 @@ fun NavController.navigateToCommunity(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.communityNavGraph(
     padding: PaddingValues,
-    navigateUp : () -> Unit,
-    navigateToWriting : () -> Unit,
-    navigateToPost: (String) -> Unit,
+    navigateToWriteCommunity : () -> Unit,
+    navigateToPost: (Int) -> Unit,
 ) {
     composable<Community> {
         CommunityRoute(
-            padding,
-            navigateUp = navigateUp,
-            navigateWriteCommunity = navigateToWriting,
-            navigateToPost = navigateToPost
+            paddingValues = padding,
+            navigateWriteCommunity = navigateToWriteCommunity,
+            navigateToPost = navigateToPost,
         )
     }
 }

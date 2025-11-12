@@ -1,6 +1,6 @@
 package com.hsLink.hslink.data.repositoryimpl.home
 
-import com.hsLink.hslink.data.dto.response.toEntity
+import com.hsLink.hslink.data.dto.response.home.toEntity
 import com.hsLink.hslink.data.remote.datasourceimpl.PostDataSourceImpl
 import com.hsLink.hslink.domain.model.home.PostPopularEntity
 import com.hsLink.hslink.domain.model.home.PostPromotionEntity

@@ -1,4 +1,5 @@
 import java.util.Properties
+import org.gradle.api.GradleException
 
 plugins {
     alias(libs.plugins.android.application)
@@ -17,6 +18,21 @@ val properties = Properties().apply {
         load(localPropertiesFile.inputStream())
     }
 }
+
+fun getRequiredProperty(key: String): String {
+
+    val localValue = properties[key]?.toString()
+    if (!localValue.isNullOrBlank()) {
+        return localValue
+    }
+
+    val envValue = System.getenv(key.toUpperCase().replace('.', '_'))
+    if (!envValue.isNullOrBlank()) {
+        return envValue
+    }
+
+    throw GradleException("Property '$key' is missing. Please define it in local.properties or as an environment variable (e.g., ${key.toUpperCase().replace('.', '_')}) in CI/CD.")
+}
 android {
     namespace = "com.hsLink.hslink"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -30,7 +46,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "\"${properties["base.url"]}\"")
+        buildConfigField("String", "BASE_URL", "\"${getRequiredProperty("base.url")}\"")
+        manifestPlaceholders["kakaoAppKey"] = getRequiredProperty("kakao.native.app.key")
 
     }
 
@@ -41,7 +58,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"${properties["base.url"]}\"")
+            buildConfigField("String", "BASE_URL", "\"${getRequiredProperty("base.url")}\"")
         }
     }
     compileOptions {
@@ -90,5 +107,12 @@ dependencies {
 
     // KaKao
     implementation("com.kakao.sdk:v2-user:2.20.1")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Paging3
+    implementation("androidx.paging:paging-runtime-ktx:3.3.0")
+    implementation("androidx.paging:paging-compose:3.3.0")
 
 }

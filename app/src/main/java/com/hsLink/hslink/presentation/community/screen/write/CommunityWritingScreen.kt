@@ -24,6 +24,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkDialog
 import com.hsLink.hslink.core.designsystem.component.HsLinkTextField
@@ -32,6 +33,7 @@ import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.community.component.BoardSelectionField
 import com.hsLink.hslink.presentation.community.component.BoardType
 import com.hsLink.hslink.presentation.community.component.CommunityWriteButton
+import com.hsLink.hslink.presentation.community.viewmodel.CommunityViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -40,7 +42,8 @@ private fun CommunityWritingScreenPreview() {
         CommunityWritingScreen(
             paddingValues = PaddingValues(),
             navigateUp = {},
-            navigateToCommunity = {}
+            navigateToCommunity = {},
+            createPost = { _, _, _ -> }
         )
     }
 }
@@ -50,11 +53,13 @@ fun CommunityWritingRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateToCommunity: () -> Unit,
+    viewModel: CommunityViewModel = hiltViewModel()
 ) {
     CommunityWritingScreen(
         paddingValues = paddingValues,
         navigateUp = navigateUp,
-        navigateToCommunity = navigateToCommunity
+        navigateToCommunity = navigateToCommunity,
+        createPost = viewModel::createPost
     )
 }
 
@@ -63,6 +68,7 @@ fun CommunityWritingScreen(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateToCommunity: () -> Unit,
+    createPost: (String, String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var selectedBoardType by remember { mutableStateOf<BoardType?>(null) }
@@ -261,6 +267,9 @@ fun CommunityWritingScreen(
             confirmText = "업로드하기",
             dismissText = "취소하기",
             onConfirm = {
+                selectedBoardType?.let { boardType ->
+                    createPost(boardType.name, title, content)
+                }
                 showUploadDialog = false
                 navigateToCommunity()
             },

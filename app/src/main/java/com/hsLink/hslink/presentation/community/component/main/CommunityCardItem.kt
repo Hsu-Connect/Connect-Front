@@ -30,6 +30,8 @@ private fun PreviewCommunityCardItem() {
             userName = "John Doe",
             userMajor = "Computer Science",
             userInfo = "Senior at XYZ University",
+            userId = "12345",
+            author = "Author Name",
             onClick = {},
         )
     }
@@ -40,6 +42,8 @@ fun CommunityCardItem(
     userName: String,
     userMajor: String,
     userInfo: String,
+    userId:String,
+    author:String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -75,13 +79,52 @@ fun CommunityCardItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Text(
-                text = userInfo,
-                color = HsLinkTheme.colors.Grey400,
-                style = HsLinkTheme.typography.caption_12Normal,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = author,
+                    color = HsLinkTheme.colors.Grey400,
+                    style = HsLinkTheme.typography.caption_12Normal,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = "·",
+                    color = HsLinkTheme.colors.Grey700,
+                    style = HsLinkTheme.typography.title_16Strong,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = userId,
+                    color = HsLinkTheme.colors.Grey400,
+                    style = HsLinkTheme.typography.caption_12Normal,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = "·",
+                    color = HsLinkTheme.colors.Grey700,
+                    style = HsLinkTheme.typography.title_16Strong,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = userInfo,
+                    color = HsLinkTheme.colors.Grey400,
+                    style = HsLinkTheme.typography.caption_12Normal,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.hsLink.hslink.data.service.search
 
-import com.hsLink.hslink.data.dto.response.MentorListResponseDto
-import com.hsLink.hslink.data.dto.response.UserProfileResponseDto
+import com.hsLink.hslink.data.dto.response.search.MentorListResponseDto
+import com.hsLink.hslink.data.dto.response.mypage.UserProfileResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

@@ -11,19 +11,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -32,93 +31,60 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.core.util.noRippleClickable
+import com.hsLink.hslink.domain.model.community.CommunityPost
 import com.hsLink.hslink.presentation.community.component.CommunityTab
 import com.hsLink.hslink.presentation.community.component.CommunityTabLayout
+import com.hsLink.hslink.presentation.community.viewmodel.CommunityViewModel
 import com.hsLink.hslink.presentation.home.component.CommunityCardItem
-
-data class CommunityPost(
-    val id: String,
-    val userName: String,
-    val userMajor: String,
-    val userInfo: String,
-)
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewCommunityScreen() {
     HsLinkTheme {
-        CommunityScreen(
-            paddingValues = PaddingValues(),
-            navigateUp = {},
-            navigateWriteCommunity = {},
-            onClick = {},
-            navigateToPost = {}
-        )
     }
 }
 
 @Composable
 fun CommunityRoute(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
     navigateWriteCommunity: () -> Unit,
-    navigateToPost: (String) -> Unit,
+    navigateToPost: (Int) -> Unit,
+    viewModel: CommunityViewModel = hiltViewModel(),
 ) {
+    val selectedTab by viewModel.selectedTab.collectAsState(initial = CommunityTab.Popular)
+    val communityPosts = viewModel.communityPosts.collectAsLazyPagingItems()
+
     CommunityScreen(
         paddingValues = paddingValues,
-        navigateUp = navigateUp,
         navigateWriteCommunity = navigateWriteCommunity,
-        onClick = {},
-        navigateToPost = navigateToPost
+        navigateToPost = navigateToPost,
+        selectedTab = selectedTab,
+        onTabSelected = viewModel::selectTab,
+        posts = communityPosts
     )
 }
 
 @Composable
 fun CommunityScreen(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit,
     navigateWriteCommunity: () -> Unit,
-    onClick: () -> Unit,
-    navigateToPost: (String) -> Unit,
+    navigateToPost: (Int) -> Unit,
     modifier: Modifier = Modifier,
-
-    ) {
-    var selectedTab by remember { mutableStateOf(CommunityTab.Popular) }
-
-    val posts = remember(selectedTab) {
-        when (selectedTab) {
-            CommunityTab.Popular -> listOf(
-                CommunityPost("1", "인기글 작성자1", "컴퓨터공학과", "인기글 내용입니다"),
-                CommunityPost("2", "인기글 작성자2", "경영학과", "좋아요가 많은 글"),
-                CommunityPost("3", "인기글 작성자3", "디자인학과", "핫한 글입니다"),
-            )
-
-            CommunityTab.Free -> listOf(
-                CommunityPost("4", "자유 작성자1", "전자공학과", "자유게시판 글1"),
-                CommunityPost("5", "자유 작성자2", "수학과", "자유게시판 글2"),
-                CommunityPost("6", "자유 작성자3", "물리학과", "자유게시판 글3"),
-            )
-
-            CommunityTab.Promotion -> listOf(
-                CommunityPost("7", "홍보 작성자1", "마케팅학과", "동아리 홍보합니다"),
-                CommunityPost("8", "홍보 작성자2", "광고홍보학과", "행사 알림"),
-                CommunityPost("9", "홍보 작성자3", "경제학과", "스터디 모집"),
-            )
-
-            CommunityTab.Notice -> listOf(
-                CommunityPost("10", "관리자1", "학생처", "중요 공지사항"),
-                CommunityPost("11", "관리자2", "교무처", "학사 일정 안내"),
-                CommunityPost("12", "관리자3", "총학생회", "필독 공지"),
-            )
-        }
-    }
-
+    selectedTab: CommunityTab,
+    onTabSelected: (CommunityTab) -> Unit,
+    posts: LazyPagingItems<CommunityPost>,
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -145,34 +111,79 @@ fun CommunityScreen(
 
         CommunityTabLayout(
             selectedTab = selectedTab,
-            onTabSelected = { tab ->
-                selectedTab = tab
-            }
+            onTabSelected = onTabSelected
         )
 
         Box(
             modifier = Modifier.fillMaxHeight()
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp,
-                    bottom = 80.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(
-                    items = posts,
-                    key = { it.id }
-                ) { post ->
-                    CommunityCardItem(
-                        userName = post.userName,
-                        userMajor = post.userMajor,
-                        userInfo = post.userInfo,
-                        onClick = { navigateToPost(post.id) }
-                    )
+            when (posts.loadState.refresh) {
+                is LoadState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is LoadState.Error -> {
+                    val error = posts.loadState.refresh as LoadState.Error
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "데이터 로드 오류 발생: ${error.error.localizedMessage}",
+                            color = Color.Red
+                        )
+                    }
+                }
+
+                else -> {
+                    if (posts.itemCount == 0) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "게시글이 존재하지 않습니다.", color = HsLinkTheme.colors.Grey500)
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = 16.dp,
+                                bottom = 80.dp
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(
+                                count = posts.itemCount,
+                                key = { index -> posts[index]?.id ?: index }
+                            ) { index ->
+                                val post = posts[index]
+                                post?.let {
+                                    CommunityCardItem(
+                                        userName = it.title,
+                                        userMajor = it.summary,
+                                        userId = it.studentId,
+                                        userInfo = it.authorStatus,
+                                        author = it.author,
+                                        onClick = { navigateToPost(it.id) }
+                                    )
+                                }
+                            }
+
+                            if (posts.loadState.append is LoadState.Loading) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 8.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

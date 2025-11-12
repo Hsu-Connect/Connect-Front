@@ -1,4 +1,4 @@
-package com.hsLink.hslink.data.dto.response
+package com.hsLink.hslink.data.dto.response.home
 
 import com.hsLink.hslink.domain.model.home.PostPopularEntity
 import com.hsLink.hslink.domain.model.home.PostPromotionEntity

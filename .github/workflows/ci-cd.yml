@@ -35,9 +35,15 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
       - name: Run unit tests
         run: ./gradlew test
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
       - name: Upload test reports
         if: always()
@@ -88,3 +94,6 @@ jobs:
 
       - name: Run Fastlane distribute
         run: bundle exec fastlane distribute
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
