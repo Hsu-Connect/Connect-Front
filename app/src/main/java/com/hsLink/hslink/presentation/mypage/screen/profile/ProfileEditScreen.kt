@@ -82,10 +82,15 @@ fun ProfileEditScreenRoute(
     navController: NavController,
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
-    viewModel: MypageViewModel = hiltViewModel() // <- ViewModel 추가
+    viewModel: MypageViewModel = hiltViewModel()
 ) {
     val userProfile by viewModel.userProfile.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+
+    // 프로필 수정 화면 진입 시 전체 프로필 데이터 로드
+    LaunchedEffect(Unit) {
+        viewModel.loadUserProfile() // <- 이 함수 추가 필요
+    }
 
     ProfileEditScreen(
         paddingValues = paddingValues,

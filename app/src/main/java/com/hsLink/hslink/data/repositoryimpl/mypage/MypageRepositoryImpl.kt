@@ -3,6 +3,7 @@ package com.hsLink.hslink.data.repositoryimpl.mypage
 
 import com.hsLink.hslink.data.dto.request.mypage.UpdateProfileRequestDto
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
+import com.hsLink.hslink.data.dto.response.mypage.MyPageUserSummaryDto
 import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
 import com.hsLink.hslink.data.service.mypage.MypageService
 import com.hsLink.hslink.domain.repository.mypage.MypageRepository
@@ -36,6 +37,19 @@ class MypageRepositoryImpl @Inject constructor(
             val response = mypageService.updateProfile(request)
             if (response.isSuccess) {
                 Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getUserSummary(): Result<MyPageUserSummaryDto> {
+        return try {
+            val response = mypageService.getUserSummary()
+            if (response.isSuccess) {
+                Result.success(response.result)
             } else {
                 Result.failure(Exception(response.message))
             }

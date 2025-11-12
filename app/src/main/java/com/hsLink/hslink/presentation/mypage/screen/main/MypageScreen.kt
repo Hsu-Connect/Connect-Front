@@ -23,6 +23,7 @@ import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
+import com.hsLink.hslink.data.dto.response.mypage.MyPageUserSummaryDto
 import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageCardItemContainer
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageDetailItemContent
@@ -31,8 +32,9 @@ import com.hsLink.hslink.presentation.mypage.navigation.profile.navigateToProfil
 import com.hsLink.hslink.presentation.mypage.viewmodel.MypageViewModel
 
 // 상태 텍스트 만드는 함수
-private fun buildStatusText(jobSeeking: Boolean, academicStatus: String): String {
+private fun buildStatusText(jobSeeking: Boolean, academicStatus: String, employed: Boolean): String {
     val jobText = if (jobSeeking) "구직 중" else "구직 중 아님"
+    val employedText = if (employed) "재직 중" else "재직 중 아님"
     val academicText = when (academicStatus) {
         "ENROLLED" -> "재학중"
         "GRADUATED" -> "졸업"
@@ -41,7 +43,7 @@ private fun buildStatusText(jobSeeking: Boolean, academicStatus: String): String
         "LEAVE_OF_ABSENCE" -> "휴학"
         else -> academicStatus
     }
-    return "$jobText · $academicText"
+    return "$jobText · $employedText · $academicText"
 }
 
 @Preview(showBackground = true)
@@ -54,15 +56,15 @@ private fun MypageScreenPreview() {
 fun MypageRoute(
     paddingValues: PaddingValues,
     navController: NavController,
-    viewModel: MypageViewModel = hiltViewModel() // ← ViewModel 추가
+    viewModel: MypageViewModel = hiltViewModel()
 ) {
-    val userProfile by viewModel.userProfile.collectAsState()
+    val userSummary by viewModel.userSummary.collectAsState() // ← 변경
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
     MypageScreen(
         paddingValues = paddingValues,
-        userProfile = userProfile, // ← 데이터 전달
+        userSummary = userSummary, // ← 변경
         isLoading = isLoading,
         error = error,
         onNavigateToProfile = {
@@ -75,7 +77,7 @@ fun MypageRoute(
 fun MypageScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    userProfile: MyPageUserProfileDto? = null,
+    userSummary: MyPageUserSummaryDto? = null, // ← 변경
     isLoading: Boolean = false,
     error: String? = null,
     onNavigateToProfile: () -> Unit = {},
@@ -112,13 +114,12 @@ fun MypageScreen(
 
         item {
             MyPageDetailItemContent(
-                name = userProfile?.name ?: "로딩중...", // ← API 데이터 사용
-                title = if (userProfile != null) {
-                    "${userProfile.studentNumber}학번 ${userProfile.major}"
+                name = userSummary?.name ?: "로딩중...", // ← 변경
+                title = if (userSummary != null) {
+                    "${userSummary.studentNumberPrefix}학번 ${userSummary.major}" // ← 변경
                 } else "로딩중...",
-                subtitle = if (userProfile != null) {
-                    // jobSeeking, employed, academicStatus로 상태 텍스트 만들기
-                    buildStatusText(userProfile.jobSeeking, userProfile.academicStatus)
+                subtitle = if (userSummary != null) {
+                    buildStatusText(userSummary.jobSeeking, userSummary.academicStatus, userSummary.employed) // ← employed 추가
                 } else "로딩중...",
                 onClick = onNavigateToProfile
             )

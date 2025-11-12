@@ -4,6 +4,7 @@ package com.hsLink.hslink.data.service.mypage
 import com.hsLink.hslink.core.network.BaseResponse
 import com.hsLink.hslink.data.dto.request.mypage.UpdateProfileRequestDto
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
+import com.hsLink.hslink.data.dto.response.mypage.MyPageUserSummaryDto
 import com.hsLink.hslink.data.dto.response.mypage.ProfileUpdateResponse
 import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
 import retrofit2.Response
@@ -19,4 +20,7 @@ interface MypageService {
     suspend fun updateProfile(
         @Body request: UpdateProfileRequestDto
     ): ProfileUpdateResponse
+
+    @GET("users/summary")
+    suspend fun getUserSummary(): BaseResponse<MyPageUserSummaryDto>
 }
