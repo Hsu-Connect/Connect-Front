@@ -10,7 +10,7 @@ import com.hsLink.hslink.presentation.community.screen.post.CommunityPostRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToCommunityPost(
-    postId: String,
+    postId: Int,
     navOptions: NavOptions? = null
 ) {
     navigate(CommunityPost(postId), navOptions)
@@ -20,8 +20,12 @@ fun NavGraphBuilder.communityPostNavGraph(
     padding: PaddingValues,
     navigateUp: () -> Unit,
 ) {
-    composable<CommunityPost> {
+    composable<CommunityPost> { backStackEntry ->
+
+        val postId = backStackEntry.arguments?.getInt("postId") ?: -1
+
         CommunityPostRoute(
+            postId = postId,
             paddingValues = padding,
             navigateUp = navigateUp
         )
@@ -29,4 +33,4 @@ fun NavGraphBuilder.communityPostNavGraph(
 }
 
 @Serializable
-data class CommunityPost(val postId: String) : Route
+data class CommunityPost(val postId: Int) : Route
