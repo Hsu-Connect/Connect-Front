@@ -1,6 +1,7 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.BuildConfig
+import com.hsLink.hslink.data.remote.AuthInterceptor
 import com.hsLink.hslink.data.service.commuunity.CommunityPostService
 import com.hsLink.hslink.data.service.home.PostService
 import com.hsLink.hslink.data.service.login.AuthService
@@ -13,9 +14,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
 import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -24,54 +23,46 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providesLoggingInterceptor() = HttpLoggingInterceptor().apply {
-        level = if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor.Level.BODY
-        } else {
-            HttpLoggingInterceptor.Level.NONE
-        }
-    }
-
-    @Provides
-    @Singleton
-    fun providesOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .addInterceptor(loggingInterceptor)
-        .build()
-
-    @Provides
-    @Singleton
-    fun providesConverterFactory(): Converter.Factory =
-        Json.Default.asConverterFactory("application/json".toMediaType())
-
-    @Provides
-    @Singleton
-    fun providesRetrofit(
-        client: OkHttpClient,
-        converterFactory: Converter.Factory,
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(converterFactory)
-            .client(client)
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = if (BuildConfig.DEBUG) {
+                        HttpLoggingInterceptor.Level.BODY
+                    } else {
+                        HttpLoggingInterceptor.Level.NONE
+                    }
+                }
+            )
             .build()
     }
 
     @Provides
     @Singleton
-    fun providePostService(retrofit: Retrofit): PostService =
-        retrofit.create(PostService::class.java)
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommunityPostService(retrofit: Retrofit): CommunityPostService {
+        return retrofit.create(CommunityPostService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostService(retrofit: Retrofit): PostService {
+        return retrofit.create(PostService::class.java)
+    }
 
     @Provides
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
     }
-    @Provides
-    @Singleton
-    fun provideCommunityPostService(retrofit: Retrofit): CommunityPostService =
-        retrofit.create(CommunityPostService::class.java)
 }
