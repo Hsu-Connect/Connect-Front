@@ -1,4 +1,4 @@
-package com.hsLink.hslink.data.dto.response
+package com.hsLink.hslink.data.dto.response.auth
 
 import kotlinx.serialization.Serializable
 

@@ -1,7 +1,7 @@
 package com.hsLink.hslink.data.remote.datasourceimpl
 
-import com.hsLink.hslink.data.dto.response.MentorListResponseDto
-import com.hsLink.hslink.data.dto.response.UserProfileResponseDto
+import com.hsLink.hslink.data.dto.response.search.MentorListResponseDto
+import com.hsLink.hslink.data.dto.response.mypage.UserProfileResponseDto
 import com.hsLink.hslink.data.remote.datasource.SearchDataSource
 import com.hsLink.hslink.data.service.search.SearchService
 import javax.inject.Inject
