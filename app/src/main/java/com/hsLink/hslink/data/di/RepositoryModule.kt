@@ -4,11 +4,13 @@ import com.hsLink.hslink.data.repositoryimpl.AuthRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.CommunityRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.DummyRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.home.PostRepositoryImpl
+import com.hsLink.hslink.data.repositoryimpl.onboarding.OnboardingRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.search.SearchRepositoryImpl
 import com.hsLink.hslink.domain.DummyRepository
 import com.hsLink.hslink.domain.repository.AuthRepository
 import com.hsLink.hslink.domain.repository.community.CommunityRepository
 import com.hsLink.hslink.domain.repository.home.PostRepository
+import com.hsLink.hslink.domain.repository.onboarding.OnboardingRepository
 import com.hsLink.hslink.domain.repository.search.SearchRepository
 import dagger.Binds
 import dagger.Module
@@ -45,4 +47,9 @@ interface RepositoryModule {
     fun bindsSearchRepository(
         searchRepositoryImpl: SearchRepositoryImpl,
     ): SearchRepository
+
+    @Binds
+    fun bindsOnboardingRepository(
+        onboardingRepositoryImpl: OnboardingRepositoryImpl,
+    ): OnboardingRepository
 }
