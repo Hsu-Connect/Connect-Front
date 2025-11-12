@@ -1,7 +1,7 @@
 package com.hsLink.hslink.data.service.login
 
-import com.hsLink.hslink.data.dto.request.SocialLoginRequestDto
-import com.hsLink.hslink.data.dto.response.SocialLoginResponseDto
+import com.hsLink.hslink.data.dto.request.auth.SocialLoginRequestDto
+import com.hsLink.hslink.data.dto.response.auth.SocialLoginResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
