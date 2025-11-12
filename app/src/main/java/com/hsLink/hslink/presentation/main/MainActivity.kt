@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,9 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.login.screen.KaKaoLoginScreen
 import com.kakao.sdk.common.KakaoSdk
@@ -77,10 +81,17 @@ class MainActivity : ComponentActivity() {
 }
 
 @Serializable
+data object AuthGraph
+
+@Serializable
 data object Login
 
 @Serializable
+data object Onboarding
+
+@Serializable
 data object AppMain
+
 
 @Composable
 private fun AppNavigation() {
@@ -93,41 +104,68 @@ private fun AppNavigation() {
         isLoginChecked = true
     }
 
-    if (!isLoginChecked) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-        return
-    }
+    Scaffold { paddingValues ->
+        if (!isLoginChecked) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            NavHost(
+                navController = navController,
+                startDestination = if (isLoggedIn) AppMain else AuthGraph
+            ) {
+                authNavGraph(
+                    navController = navController,
+                    paddingValues = paddingValues,
+                    onNavigateToOnboarding = {
+                        navController.navigate(Onboarding)
+                    },
+                    onNavigateToAppMain = {
+                        navController.navigate(AppMain) {
+                            popUpTo(AuthGraph) { inclusive = true }
+                        }
+                    }
+                )
 
-    NavHost(
-        navController = navController,
-        startDestination = if (isLoggedIn) AppMain else Login
-    ) {
-        composable<Login> {
-            KaKaoLoginScreen(
-                paddingValues = PaddingValues(),
-                onNavigateToHome = {
-                    navController.navigate(AppMain) {
-                        popUpTo(Login) { inclusive = true }
-                    }
-                },
-                onNavigateToOnboarding = {
-                    navController.navigate(AppMain) {
-                        popUpTo(Login) { inclusive = true }
-                    }
+                composable<AppMain> {
+                    MainScreen()
                 }
-            )
-        }
-
-        composable<AppMain> {
-            MainScreen()
+            }
         }
     }
 }
+
+
+
+fun NavGraphBuilder.authNavGraph(
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+    onNavigateToOnboarding: () -> Unit,
+    onNavigateToAppMain: () -> Unit,
+) {
+    navigation<AuthGraph>(startDestination = Login) {
+
+        composable<Login> {
+            KaKaoLoginScreen(
+                paddingValues = paddingValues,
+                onNavigateToHome = onNavigateToOnboarding,
+                onNavigateToOnboarding = onNavigateToOnboarding
+            )
+        }
+
+        composable<Onboarding> {
+            com.hsLink.hslink.presentation.onboarding.OnboardingRoute(
+                paddingValues = paddingValues,
+                navigateUp = { navController.popBackStack() },
+                navigateToHome = onNavigateToAppMain
+            )
+        }
+    }
+}
+
 
 private suspend fun checkLoginStatus(): Boolean {
     return false
