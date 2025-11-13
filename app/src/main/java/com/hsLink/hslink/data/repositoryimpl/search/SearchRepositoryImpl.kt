@@ -33,7 +33,7 @@ class SearchRepositoryImpl @Inject constructor(
                             major = dto.major,
                             jobSeeking = dto.jobSeeking,
                             employed = dto.employed,
-                            academicStatus = dto.academicStatus
+                            academicStatus = dto.academicStatus ?: ""
                         )
                     }
                 )
