@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkActionButton
@@ -31,19 +34,22 @@ import com.hsLink.hslink.core.designsystem.component.HsLinkSelectButton
 import com.hsLink.hslink.core.designsystem.component.HsLinkTextField
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
+import com.hsLink.hslink.data.dto.request.onboarding.CareerUpdateRequestDto
+import com.hsLink.hslink.data.dto.response.onboarding.CareerDto
 import com.hsLink.hslink.presentation.mypage.component.career.UnsavedChangesDialog
+import com.hsLink.hslink.presentation.mypage.viewmodel.CareerViewModel
 import com.hsLink.hslink.presentation.onboarding.model.JobType
 
 @Preview(showBackground = true)
 @Composable
 private fun CareerEditScreenPreview() {
     HsLinkTheme {
-        CareerEditScreen(
-            paddingValues = PaddingValues(),
-            onBackClick = { },
-            onCloseClick = { },
-            onSaveClick = { }
-        )
+//        CareerEditScreen(
+//            paddingValues = PaddingValues(),
+//            onBackClick = { },
+//            onCloseClick = { },
+//            onSaveClick = { }
+//        )
     }
 }
 
@@ -51,13 +57,36 @@ private fun CareerEditScreenPreview() {
 fun CareerEditRoute(
     paddingValues: PaddingValues,
     navController: NavController,
+    careerId: Long?, // ← Long?
+    careerViewModel: CareerViewModel = hiltViewModel()
 ) {
+    val selectedCareer by careerViewModel.selectedCareer.collectAsState()
+    val isLoading by careerViewModel.isLoading.collectAsState()
+
+    LaunchedEffect(careerId) {
+        careerId?.let { id ->
+            careerViewModel.loadCareer(id)
+        }
+    }
+
     CareerEditScreen(
         paddingValues = paddingValues,
+        career = selectedCareer,
+        isLoading = isLoading,
         onBackClick = { navController.popBackStack() },
         onCloseClick = { navController.popBackStack() },
-        onSaveClick = {
-            // 저장 로직 후 이전 화면으로
+        onSaveClick = { companyName, position, jobType, startYm, endYm, employed ->
+            careerId?.let { id -> // ← null 체크
+                val requestDto = CareerUpdateRequestDto( // ← 실제 DTO 생성
+                    companyName = companyName,
+                    position = position,
+                    jobType = jobType,
+                    startYm = startYm,
+                    endYm = endYm,
+                    employed = employed
+                )
+                careerViewModel.updateCareer(id, requestDto) // ← 실제 API 호출
+            }
             navController.popBackStack()
         }
     )
@@ -68,29 +97,36 @@ fun CareerEditScreen(
     paddingValues: PaddingValues,
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onSaveClick: (String, String, JobType, String, String?, Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    career: CareerDto? = null, // ← 추가
+    isLoading: Boolean = false, // ← 추가
 ) {
-    var startDate by remember { mutableStateOf("2024.04") }
-    var endDate by remember { mutableStateOf("2024.08") }
-    var isCurrentlyEmployed by remember { mutableStateOf(false) }
-    var companyName by remember { mutableStateOf("한성대학교") }
-    var jobName by remember { mutableStateOf("영업직") }
-    var selectedJobType by remember { mutableStateOf<JobType?>(JobType.PERMANENT) }
+    // 기존 하드코딩된 초기값들을 career 데이터로 교체
+    var startDate by remember(career) { mutableStateOf(career?.startYm ?: "") }
+    var endDate by remember(career) { mutableStateOf(career?.endYm ?: "") }
+    var isCurrentlyEmployed by remember(career) { mutableStateOf(career?.employed ?: false) }
+    var companyName by remember(career) { mutableStateOf(career?.companyName ?: "") }
+    var jobName by remember(career) { mutableStateOf(career?.position ?: "") }
+    var selectedJobType by remember(career) { mutableStateOf(career?.jobType) }
 
+    // ← 누락된 Focus 상태 변수들 추가
     var companyFocused by remember { mutableStateOf(false) }
     var jobNameFocused by remember { mutableStateOf(false) }
     var startDateFocused by remember { mutableStateOf(false) }
     var endDateFocused by remember { mutableStateOf(false) }
 
+    // ← 누락된 Dialog 상태 변수 추가
     var showExitDialog by remember { mutableStateOf(false) }
 
+    // ← 수정된 hasUnsavedChanges 함수
     fun hasUnsavedChanges(): Boolean {
-        return startDate != "2024.04" ||
-                endDate != "2024.08" ||
-                companyName != "한성대학교" ||
-                jobName != "영업직" ||
-                selectedJobType != JobType.PERMANENT
+        return startDate != (career?.startYm ?: "") ||
+                endDate != (career?.endYm ?: "") ||
+                companyName != (career?.companyName ?: "") ||
+                jobName != (career?.position ?: "") ||
+                selectedJobType != career?.jobType ||
+                isCurrentlyEmployed != (career?.employed ?: false)
     }
 
     fun handleExit() {
@@ -132,7 +168,7 @@ fun CareerEditScreen(
 
         item {
             Text(
-                text = "아래의 정보를 등록해주세요",
+                text = "아래의 정보를 수정해주세요", // ← 문구 수정
                 style = HsLinkTheme.typography.title_20Strong,
                 color = HsLinkTheme.colors.Grey700
             )
@@ -142,7 +178,7 @@ fun CareerEditScreen(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = buildAnnotatedString {
-                        append("현재 재직 여부 (형식 : 24.04) ")
+                        append("재직 기간 (형식 : 24.04) ")
                         withStyle(style = SpanStyle(color = HsLinkTheme.colors.Red500)) {
                             append("*")
                         }
@@ -167,7 +203,11 @@ fun CareerEditScreen(
                     HsLinkTextField(
                         value = endDate,
                         placeholder = "근무종료일",
-                        onValueChanged = { endDate = it },
+                        onValueChanged = {
+                            if (!isCurrentlyEmployed) { // ← 재직중이 아닐 때만 변경 허용
+                                endDate = it
+                            }
+                        },
                         modifier = Modifier.weight(1f),
                         borderColor = if (endDateFocused) HsLinkTheme.colors.SkyBlue500 else HsLinkTheme.colors.Grey300,
                         backgroundColor = HsLinkTheme.colors.Common,
@@ -175,7 +215,10 @@ fun CareerEditScreen(
                     )
                     HsLinkSelectButton(
                         label = "재직중",
-                        onClick = { isCurrentlyEmployed = !isCurrentlyEmployed },
+                        onClick = {
+                            isCurrentlyEmployed = !isCurrentlyEmployed
+                            if (isCurrentlyEmployed) endDate = "" // 재직중이면 종료일 초기화
+                        },
                         size = HsLinkButtonSize.Medium,
                         isSelected = isCurrentlyEmployed
                     )
@@ -297,13 +340,26 @@ fun CareerEditScreen(
         item {
             HsLinkActionButton(
                 label = "수정완료",
-                onClick = onSaveClick,
+                onClick = {
+                    // 폼 데이터 수집해서 onSaveClick에 전달
+                    selectedJobType?.let { jobType ->
+                        onSaveClick(
+                            companyName,        // String
+                            jobName,            // String
+                            jobType,            // JobType
+                            startDate,          // String
+                            if (isCurrentlyEmployed) null else endDate, // String?
+                            isCurrentlyEmployed // Boolean
+                        )
+                    }
+                },
                 size = HsLinkActionButtonSize.Large,
-                isEnabled = isFormValid,
+                isEnabled = isFormValid && !isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
         }
     }
+
     if (showExitDialog) {
         UnsavedChangesDialog(
             onDismiss = { showExitDialog = false },
@@ -313,5 +369,4 @@ fun CareerEditScreen(
             }
         )
     }
-
 }

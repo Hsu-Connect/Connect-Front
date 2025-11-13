@@ -9,21 +9,29 @@ import com.hsLink.hslink.core.navigation.Route
 import com.hsLink.hslink.presentation.mypage.screen.career.CareerEditRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToCareerEdit(navOptions: NavOptions? = null) {
-    navigate(CareerEdit, navOptions)
+// ← careerId 파라미터 추가
+fun NavController.navigateToCareerEdit(careerId: Long, navOptions: NavOptions? = null) {
+    navigate(CareerEdit(careerId = careerId), navOptions)
 }
 
 fun NavGraphBuilder.careerNavGraph(
     padding: PaddingValues,
     navController: NavController,
 ) {
-    composable<CareerEdit> {
+    composable<CareerEdit> { backStackEntry ->
+        val careerEdit = backStackEntry.arguments?.let {
+            // ← careerId 추출
+            CareerEdit(careerId = it.getLong("careerId"))
+        } ?: CareerEdit(careerId = 0L)
+
         CareerEditRoute(
             paddingValues = padding,
-            navController = navController
+            navController = navController,
+            careerId = careerEdit.careerId // ← careerId 전달
         )
     }
 }
 
+// ← data object에서 data class로 변경
 @Serializable
-data object CareerEdit : Route
+data class CareerEdit(val careerId: Long) : Route

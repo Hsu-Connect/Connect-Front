@@ -44,10 +44,14 @@ import com.hsLink.hslink.core.designsystem.component.HsLinkTextField
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
+import com.hsLink.hslink.data.dto.request.common.JobType            // ← 경로 수정
+import com.hsLink.hslink.data.dto.response.onboarding.CareerDto
+import com.hsLink.hslink.presentation.mypage.component.profile.CareerCard
 import com.hsLink.hslink.presentation.mypage.component.profile.CareerCard
 import com.hsLink.hslink.presentation.mypage.component.profile.SNSCard
 import com.hsLink.hslink.presentation.mypage.navigation.career.navigateToCareerEdit
 import com.hsLink.hslink.presentation.mypage.navigation.sns.navigateToSNSEdit
+import com.hsLink.hslink.presentation.mypage.viewmodel.CareerViewModel
 import com.hsLink.hslink.presentation.mypage.viewmodel.MypageViewModel
 
 enum class MajorType(val displayName: String) {
@@ -82,24 +86,30 @@ fun ProfileEditScreenRoute(
     navController: NavController,
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
-    viewModel: MypageViewModel = hiltViewModel()
+    viewModel: MypageViewModel = hiltViewModel(),
+    careerViewModel: CareerViewModel = hiltViewModel() // ← 추가
+
 ) {
     val userProfile by viewModel.userProfile.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val careers by careerViewModel.careers.collectAsState() // ← 추가
+    val isCareerLoading by careerViewModel.isLoading.collectAsState() // ← 추가
 
     // 프로필 수정 화면 진입 시 전체 프로필 데이터 로드
     LaunchedEffect(Unit) {
-        viewModel.loadUserProfile() // <- 이 함수 추가 필요
+        viewModel.loadUserProfile()
+        careerViewModel.loadMyCareers()
     }
 
     ProfileEditScreen(
         paddingValues = paddingValues,
-        userProfile = userProfile, // <- 기존 데이터 전달
+        userProfile = userProfile,
+        careers = careers, // ← 추가
         isLoading = isLoading,
+        isCareerLoading = isCareerLoading, // ← 추가
         onBackClick = onBackClick,
         onCloseClick = onCloseClick,
         onSaveClick = { studentNumber, name, major, mentor, jobSeeking ->
-            // ViewModel의 updateProfile 호출
             viewModel.updateProfile(
                 studentNumber = studentNumber,
                 name = name,
@@ -107,11 +117,10 @@ fun ProfileEditScreenRoute(
                 mentor = mentor,
                 jobSeeking = jobSeeking
             )
-            // 저장 후 뒤로 가기
             onBackClick()
         },
-        onCareerClick = {
-            navController.navigateToCareerEdit()
+        onCareerClick = { career ->
+            navController.navigateToCareerEdit(careerId = career.id)
         },
         onSNSClick = {
             navController.navigateToSNSEdit()
@@ -123,12 +132,14 @@ fun ProfileEditScreenRoute(
 fun ProfileEditScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    userProfile: MyPageUserProfileDto? = null,  // <- 추가
-    isLoading: Boolean = false,                 // <- 추가
+    userProfile: MyPageUserProfileDto? = null,
+    isLoading: Boolean = false,
+    careers: List<CareerDto> = emptyList(),
+    isCareerLoading: Boolean = false,
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
     onSaveClick: (String?, String?, String?, Boolean?, Boolean?) -> Unit = { _, _, _, _, _ -> },
-    onCareerClick: () -> Unit = {},
+    onCareerClick: (CareerDto) -> Unit = {},
     onSNSClick: () -> Unit = {},
 ) {
 
@@ -344,12 +355,14 @@ fun ProfileEditScreen(
                 }
 
                 Box {
-                    CareerCard(
-                        name = "투썸플레이스",
-                        title = "영업",
-                        dateRange = "2024.02 ~ 2024.10",  // ← subtitle을 dateRange로 변경
-                        onClick = onCareerClick
-                    )
+                    careers.forEach { career ->
+                        CareerCard(
+                            name = career.companyName,
+                            title = career.position,
+                            dateRange = "${career.startYm} ~ ${career.endYm ?: "현재"}",
+                            onClick = { onCareerClick(career) }
+                        )
+                    }
                 }
             }
         }
