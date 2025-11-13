@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
@@ -23,6 +24,7 @@ import com.hsLink.hslink.core.designsystem.component.HsLinkActionButtonSize
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.onboarding.component.OnboardingProgressBar
 import com.hsLink.hslink.presentation.onboarding.component.screen.CareerScreen
+import com.hsLink.hslink.presentation.onboarding.component.screen.EmailScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.EmploymentStatusScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.JobInfoScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.JobSeekingScreen
@@ -31,6 +33,7 @@ import com.hsLink.hslink.presentation.onboarding.component.screen.MajorScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.MentorshipScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.NameScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.StudentIdScreen
+import com.hsLink.hslink.presentation.onboarding.component.screen.LinkAddScreen // 새로운 폼 임포트
 import com.hsLink.hslink.presentation.onboarding.model.OnboardingStep
 import com.hsLink.hslink.presentation.onboarding.viewmodel.OnboardingViewModel
 
@@ -79,6 +82,7 @@ fun OnboardingRoute(
             )
         }
 
+
         OnboardingStep.EMPLOYMENT_STATUS -> {
             EmploymentStatusScreen(
                 selectedStatus = state.employmentStatus,
@@ -91,36 +95,42 @@ fun OnboardingRoute(
         }
 
         OnboardingStep.CAREER -> {
+
             CareerScreen(
-                selectedStatus = state.employmentStatus,
+                selectedCareer = state.career,
+                careerList = state.careerList,
                 progress = state.currentStep.progress,
                 paddingValues = paddingValues,
-                onStatusSelect = {},
+                onCareerSelect = viewModel::updateCareer,
                 onPreviousClick = viewModel::moveToPreviousStep,
-                onNextClick = viewModel::moveToNextStep
+                onNextClick = viewModel::moveToNextStep,
+                onAddCareerClick = viewModel::openJobInfoForm
             )
         }
 
         OnboardingStep.JOB_INFO -> {
             JobInfoScreen(
-                startDate = state.startDate,
-                endDate = state.endDate,
-                isCurrentlyEmployed = state.isCurrentlyEmployed,
-                companyName = state.companyName,
-                jobName = state.jobName,
-                selectedJobType = state.jobType,
+                companyName = state.tempCompanyName,
+                position = state.tempPosition,
+                department = state.tempDepartment,
+                selectedJobType = state.tempJobType,
+                startYm = state.tempStartYm,
+                endYm = state.tempEndYm,
+                isCurrentlyEmployed = state.tempIsEmployed,
                 progress = state.currentStep.progress,
                 paddingValues = paddingValues,
-                onStartDateChange = viewModel::updateStartDate,
-                onEndDateChange = viewModel::updateEndDate,
-                onCurrentlyEmployedChange = viewModel::updateIsCurrentlyEmployed,
-                onCompanyNameChange = viewModel::updateCompanyName,
-                onJobNameChange = viewModel::updateJobName,
-                onJobTypeSelect = viewModel::updateJobType,
-                onCancelClick = viewModel::moveToPreviousStep,
-                onSaveClick = viewModel::moveToNextStep
+                onCompanyNameChange = viewModel::updateTempCompanyName,
+                onPositionChange = viewModel::updateTempPosition,
+                onDepartmentChange = viewModel::updateTempDepartment,
+                onJobTypeSelect = viewModel::updateTempJobType,
+                onStartDateChange = viewModel::updateTempStartYm,
+                onEndDateChange = viewModel::updateTempEndYm,
+                onCurrentlyEmployedChange = viewModel::updateTempIsEmployed,
+                onPreviousClick = viewModel::moveToPreviousStep,
+                onNextClick = viewModel::submitJobInfoAndReturnToCareerList
             )
         }
+
 
         OnboardingStep.JOB_SEEKING -> {
             JobSeekingScreen(
@@ -144,18 +154,41 @@ fun OnboardingRoute(
             )
         }
 
-        OnboardingStep.LINKS -> {
-            LinksScreen(
-                links = state.links,
+        OnboardingStep.EMAIL -> {
+            EmailScreen(
+                email = state.email,
                 progress = state.currentStep.progress,
                 paddingValues = paddingValues,
-                onAddLink = viewModel::addLink,
-                onRemoveLink = viewModel::removeLink,
+                onEmailChange = viewModel::updateEmail,
+                onPreviousClick = viewModel::moveToPreviousStep,
+                onNextClick = viewModel::moveToNextStep
+            )
+        }
+
+        OnboardingStep.LINKS_LIST -> {
+            LinksScreen(
+                linkList = state.linkList,
+                progress = state.currentStep.progress,
+                paddingValues = paddingValues,
                 onPreviousClick = viewModel::moveToPreviousStep,
                 onNextClick = {
                     viewModel.submitOnboarding()
                     navigateToHome()
-                }
+                },
+                onAddLinkClick = viewModel::openLinkForm
+            )
+        }
+
+        OnboardingStep.LINKS -> {
+            LinkAddScreen(
+                type = state.tempLinkType,
+                url = state.tempLinkUrl,
+                progress = state.currentStep.progress,
+                paddingValues = paddingValues,
+                onTypeSelect = viewModel::updateTempLinkType,
+                onUrlChange = viewModel::updateTempLinkUrl,
+                onPreviousClick = viewModel::moveToPreviousStep,
+                onNextClick = viewModel::submitLinkAndReturnToLinkList
             )
         }
     }
@@ -225,6 +258,7 @@ fun OnboardingScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Content
             Column(
                 modifier = Modifier
                     .weight(1f)

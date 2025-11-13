@@ -1,38 +1,66 @@
 package com.hsLink.hslink.presentation.onboarding.model
 
+import com.hsLink.hslink.domain.model.search.CareerItemEntity
+import com.hsLink.hslink.domain.model.search.LinkItemEntity
+
 data class OnboardingState(
     val studentId: String = "",
     val name: String = "",
     val major: String = "",
     val majorQuery: String = "",
     val employmentStatus: EmploymentStatus? = null,
+    val career: Boolean? = null,
+    val isExperiencedPath: Boolean = false,
     val companyName: String = "",
-    val jobName: String = "",
-    val startDate: String = "",
-    val endDate: String = "",
-    val isCurrentlyEmployed: Boolean = false,
+    val position: String = "",
+    val department: String = "",
     val jobType: JobType? = null,
+    val careerList: List<CareerItemEntity> = emptyList(),
+    val linkList: List<LinkItemEntity> = emptyList(),
+    val tempCompanyName: String = "",
+    val tempPosition: String = "",
+    val tempDepartment: String = "",
+    val tempJobType: JobType? = null,
+    val tempStartYm: String = "",
+    val tempEndYm: String? = null,
+    val tempIsEmployed: Boolean = false,
+    val tempLinkType: LinkType? = null,
+    val tempLinkUrl: String = "",
     val wantsMentorship: Boolean? = null,
     val isJobSeeking: Boolean? = null,
-    val links: List<ExternalLink> = emptyList(),
     val currentStep: OnboardingStep = OnboardingStep.STUDENT_ID,
+    val email: String = "",
+    val isLoading: Boolean = false,
+    val apiError: String? = null
 )
 
-enum class OnboardingStep(val stepNumber: Int, val totalSteps: Int = 9) {
+
+enum class OnboardingStep(val stepNumber: Int, val totalSteps: Int = 11) {
     STUDENT_ID(1),
     NAME(2),
     MAJOR(3),
     EMPLOYMENT_STATUS(4),
-
     CAREER(5),
     JOB_INFO(6),
-    MENTORSHIP(7),
-    LINKS(8),
-    JOB_SEEKING(9);
+    JOB_SEEKING(7),
+    MENTORSHIP(8),
+    EMAIL(9),
+    LINKS_LIST(10),
+    LINKS(11);
 
 
     val progress: Float
         get() = stepNumber.toFloat() / totalSteps.toFloat()
+
+    fun next(): OnboardingStep? {
+        val nextStepNumber = this.stepNumber + 1
+        return entries.find { it.stepNumber == nextStepNumber }
+    }
+
+    fun previous(): OnboardingStep? {
+        val previousStepNumber = this.stepNumber - 1
+        return entries.find { it.stepNumber == previousStepNumber }
+    }
 }
 
 
@@ -45,8 +73,8 @@ enum class EmploymentStatus(val label: String) {
 }
 
 enum class JobType(val label: String) {
-    FULL_TIME("정규직"),
-    CONTRACT("계약직"),
+    PERMANENT("정규직"),
+    TEMPORARY("계약직"),
     INTERN("인턴"),
     FREELANCER("프리랜서")
 }

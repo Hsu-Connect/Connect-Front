@@ -71,15 +71,13 @@ fun CareerEditScreen(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // State 관리
     var startDate by remember { mutableStateOf("2024.04") }
     var endDate by remember { mutableStateOf("2024.08") }
     var isCurrentlyEmployed by remember { mutableStateOf(false) }
     var companyName by remember { mutableStateOf("한성대학교") }
     var jobName by remember { mutableStateOf("영업직") }
-    var selectedJobType by remember { mutableStateOf<JobType?>(JobType.FULL_TIME) }
+    var selectedJobType by remember { mutableStateOf<JobType?>(JobType.PERMANENT) }
 
-    // Focus state들
     var companyFocused by remember { mutableStateOf(false) }
     var jobNameFocused by remember { mutableStateOf(false) }
     var startDateFocused by remember { mutableStateOf(false) }
@@ -87,16 +85,14 @@ fun CareerEditScreen(
 
     var showExitDialog by remember { mutableStateOf(false) }
 
-    // 변경사항이 있는지 체크하는 함수 (함수 내부로 이동)
     fun hasUnsavedChanges(): Boolean {
         return startDate != "2024.04" ||
                 endDate != "2024.08" ||
                 companyName != "한성대학교" ||
                 jobName != "영업직" ||
-                selectedJobType != JobType.FULL_TIME
+                selectedJobType != JobType.PERMANENT
     }
 
-    // 나가기 처리 함수
     fun handleExit() {
         if (hasUnsavedChanges()) {
             showExitDialog = true
@@ -129,8 +125,8 @@ fun CareerEditScreen(
                 },
                 leftIcon = R.drawable.ic_topbar_arrowleft,
                 rightIconFirst = R.drawable.ic_topbar_close,
-                onLeftIconClick = { handleExit() },     // ← 수정
-                onRightIconFirstClick = { handleExit() } // ← 수정
+                onLeftIconClick = { handleExit() },
+                onRightIconFirstClick = { handleExit() }
             )
         }
 
@@ -142,7 +138,6 @@ fun CareerEditScreen(
             )
         }
 
-        // 현재 재직 여부 (날짜 범위)
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
@@ -188,7 +183,6 @@ fun CareerEditScreen(
             }
         }
 
-        // 회사명
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
@@ -214,7 +208,6 @@ fun CareerEditScreen(
             }
         }
 
-        // 직무명
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
@@ -240,7 +233,6 @@ fun CareerEditScreen(
             }
         }
 
-// 재직 형태 (4개 버튼)
         item {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
@@ -262,24 +254,23 @@ fun CareerEditScreen(
                     ) {
                         HsLinkSelectButton(
                             modifier = Modifier.weight(1f),
-                            label = JobType.FULL_TIME.label,
-                            onClick = { selectedJobType = JobType.FULL_TIME },
+                            label = JobType.PERMANENT.label,
+                            onClick = { selectedJobType = JobType.PERMANENT },
                             size = HsLinkButtonSize.Large,
                             isEnabled = true,
-                            isSelected = selectedJobType == JobType.FULL_TIME
+                            isSelected = selectedJobType == JobType.PERMANENT
                         )
                         HsLinkSelectButton(
                             modifier = Modifier.weight(1f),
-                            label = JobType.CONTRACT.label,
-                            onClick = { selectedJobType = JobType.CONTRACT },
+                            label = JobType.TEMPORARY.label,
+                            onClick = { selectedJobType = JobType.TEMPORARY },
                             size = HsLinkButtonSize.Large,
                             isEnabled = true,
-                            isSelected = selectedJobType == JobType.CONTRACT
+                            isSelected = selectedJobType == JobType.TEMPORARY
                         )
                     }
 
                     Row(
-                        // ← 이 Row가 위 Row와 같은 레벨에 있어야 함
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         HsLinkSelectButton(
@@ -301,9 +292,9 @@ fun CareerEditScreen(
                     }
                 }
             }
-        } // ← 여기서 재직 형태 item 종료
+        }
 
-        item {  // ← 새로운 item으로 분리
+        item {
             HsLinkActionButton(
                 label = "수정완료",
                 onClick = onSaveClick,
