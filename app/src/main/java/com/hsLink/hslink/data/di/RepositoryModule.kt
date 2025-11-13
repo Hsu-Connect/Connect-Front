@@ -1,15 +1,19 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.data.repositoryimpl.AuthRepositoryImpl
+import com.hsLink.hslink.data.repositoryimpl.CareerRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.CommunityRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.DummyRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.home.PostRepositoryImpl
+import com.hsLink.hslink.data.repositoryimpl.mypage.MypageRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.onboarding.OnboardingRepositoryImpl
 import com.hsLink.hslink.data.repositoryimpl.search.SearchRepositoryImpl
 import com.hsLink.hslink.domain.DummyRepository
 import com.hsLink.hslink.domain.repository.AuthRepository
+import com.hsLink.hslink.domain.repository.CareerRepository
 import com.hsLink.hslink.domain.repository.community.CommunityRepository
 import com.hsLink.hslink.domain.repository.home.PostRepository
+import com.hsLink.hslink.domain.repository.mypage.MypageRepository
 import com.hsLink.hslink.domain.repository.onboarding.OnboardingRepository
 import com.hsLink.hslink.domain.repository.search.SearchRepository
 import dagger.Binds
@@ -49,7 +53,17 @@ interface RepositoryModule {
     ): SearchRepository
 
     @Binds
+    fun bindMypageRepository(
+        mypageRepositoryImpl: MypageRepositoryImpl
+    ): MypageRepository
+
+    @Binds
     fun bindsOnboardingRepository(
         onboardingRepositoryImpl: OnboardingRepositoryImpl,
     ): OnboardingRepository
+
+    @Binds
+    fun bindCareerRepository(
+        careerRepositoryImpl: CareerRepositoryImpl
+    ): CareerRepository
 }

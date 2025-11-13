@@ -28,3 +28,13 @@ data class LinkRequest(
     @SerialName("url")
     val url: String
 )
+@Serializable
+data class CareerUpdateRequestDto(
+    val companyName: String,
+    val position: String,
+    val jobType: JobType,
+    val startYm: String,
+    val endYm: String?,
+    val employed: Boolean
+)
+

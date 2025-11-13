@@ -2,6 +2,7 @@ package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.BuildConfig
 import com.hsLink.hslink.data.remote.AuthInterceptor
+import com.hsLink.hslink.data.service.CareerService
 import com.hsLink.hslink.data.service.commuunity.CommunityPostService
 import com.hsLink.hslink.data.service.home.PostService
 import com.hsLink.hslink.data.service.login.AuthService
@@ -75,5 +76,10 @@ object NetworkModule {
     @Singleton
     fun provideOnboardingService(retrofit: Retrofit): OnboardingService {
         return retrofit.create(OnboardingService::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideCareerService(retrofit: Retrofit): CareerService {
+        return retrofit.create(CareerService::class.java)
     }
 }

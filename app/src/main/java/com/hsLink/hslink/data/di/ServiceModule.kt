@@ -1,6 +1,7 @@
 package com.hsLink.hslink.data.di
 
 import com.hsLink.hslink.data.service.DummyService
+import com.hsLink.hslink.data.service.mypage.MypageService
 import com.hsLink.hslink.data.service.search.SearchService
 import dagger.Module
 import dagger.Provides
@@ -22,6 +23,11 @@ object ServiceModule {
     @Singleton
     fun provideSearchService(retrofit: Retrofit): SearchService {
         return retrofit.create(SearchService::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideMypageService(retrofit: Retrofit): MypageService {
+        return retrofit.create(MypageService::class.java)
     }
 
 }

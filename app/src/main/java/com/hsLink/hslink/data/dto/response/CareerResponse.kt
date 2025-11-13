@@ -25,6 +25,19 @@ data class LinkResponse(
     @SerialName("url") val url: String,
 )
 
+
+@Serializable
+data class CareerDto(
+    val id: Long,
+    val companyName: String,
+    val position: String,
+    val jobType: JobType,
+    val employed: Boolean,
+    val startYm: String,
+    val endYm: String?
+)
+
+
 typealias CareerListResponseDto = List<CareerResponse>
 
 @Serializable

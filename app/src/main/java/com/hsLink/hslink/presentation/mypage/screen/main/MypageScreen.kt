@@ -10,33 +10,77 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
+import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
+import com.hsLink.hslink.data.dto.response.mypage.MyPageUserSummaryDto
+import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageCardItemContainer
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageDetailItemContent
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageItemData
 import com.hsLink.hslink.presentation.mypage.navigation.profile.navigateToProfileEdit
+import com.hsLink.hslink.presentation.mypage.viewmodel.MypageViewModel
+
+// 상태 텍스트 만드는 함수
+private fun buildStatusText(jobSeeking: Boolean, academicStatus: String, employed: Boolean): String {
+    val jobText = if (jobSeeking) "구직 중" else "구직 중 아님"
+    val employedText = if (employed) "재직 중" else "재직 중 아님"
+    val academicText = when (academicStatus) {
+        "ENROLLED" -> "재학중"
+        "GRADUATED" -> "졸업"
+        "EXPECTED_GRADUATION" -> "졸업예정"
+        "COMPLETED" -> "수료"
+        "LEAVE_OF_ABSENCE" -> "휴학"
+        else -> academicStatus
+    }
+    return "$jobText · $employedText · $academicText"
+}
 
 @Preview(showBackground = true)
 @Composable
 private fun MypageScreenPreview() {
-    MypageScreen(paddingValues = PaddingValues())
 }
 
 @Composable
 fun MypageRoute(
     paddingValues: PaddingValues,
     navController: NavController,
+    viewModel: MypageViewModel = hiltViewModel()
 ) {
+    val userSummary by viewModel.userSummary.collectAsState() // ← 변경
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadUserSummary() // 또는 loadMypage()
+    }
+
+    // ← 프로필 수정 후 돌아왔을 때 새로고침
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    LaunchedEffect(currentBackStackEntry) {
+        // 프로필 수정 화면에서 돌아왔을 때만 새로고침
+        if (currentBackStackEntry?.destination?.route?.contains("mypage") == true) {
+            viewModel.loadUserSummary()
+        }
+    }
+
     MypageScreen(
         paddingValues = paddingValues,
+        userSummary = userSummary, // ← 변경
+        isLoading = isLoading,
+        error = error,
         onNavigateToProfile = {
             navController.navigateToProfileEdit()
         }
@@ -47,11 +91,14 @@ fun MypageRoute(
 fun MypageScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    onNavigateToProfile: () -> Unit = {},  // 프로필로 이동
-    onNavigateToPosts: () -> Unit = {},    // 게시글로 이동
-    onNavigateToSettings: () -> Unit = {},  // 설정으로 이동
-    onLogout: () -> Unit = {},             // 로그아웃
-    onQuit: () -> Unit = {},               // 탈퇴
+    userSummary: MyPageUserSummaryDto? = null, // ← 변경
+    isLoading: Boolean = false,
+    error: String? = null,
+    onNavigateToProfile: () -> Unit = {},
+    onNavigateToPosts: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onLogout: () -> Unit = {},
+    onQuit: () -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier
@@ -81,23 +128,14 @@ fun MypageScreen(
 
         item {
             MyPageDetailItemContent(
-                name = "송효재",
-                title = "21학번 회계재무경영",
-                subtitle = "구직 중 · 재직 중 · 졸업",
+                name = userSummary?.name ?: "로딩중...", // ← 변경
+                title = if (userSummary != null) {
+                    "${userSummary.studentNumberPrefix}학번 ${userSummary.major}" // ← 변경
+                } else "로딩중...",
+                subtitle = if (userSummary != null) {
+                    buildStatusText(userSummary.jobSeeking, userSummary.academicStatus, userSummary.employed) // ← employed 추가
+                } else "로딩중...",
                 onClick = onNavigateToProfile
-            )
-        }
-
-        item {
-            MyPageCardItemContainer(
-                text = "마이페이지",
-                items = listOf(
-                    MyPageItemData(id = "1", title = "나의 게시글", route = "/posts"),
-                    MyPageItemData(id = "2", title = "나의 댓글", route = "/settings")
-                ),
-                onItemClick = { item ->
-                    // 클릭 처리
-                }
             )
         }
 
