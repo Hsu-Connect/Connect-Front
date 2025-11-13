@@ -204,8 +204,8 @@ fun MypageScreen(
         ConfirmDialog(
             title = "로그아웃을\n하시겠습니까?",
             message = null,
-            cancelText = "취소하기",
-            confirmText = "로그아웃",
+            cancelText = "취소",
+            confirmText = "확인",
             onDismiss = { showLogoutDialog = false },
             onConfirm = {
                 showLogoutDialog = false
@@ -219,8 +219,8 @@ fun MypageScreen(
         ConfirmDialog(
             title = "계정을 삭제하시겠습니까?",
             message = "데이터가 복구되지 않는데 괜찮으신가요?",
-            cancelText = "취소하기",
-            confirmText = "삭제하기",
+            cancelText = "취소",
+            confirmText = "확인",
             onDismiss = { showWithdrawDialog = false },
             onConfirm = {
                 showWithdrawDialog = false
