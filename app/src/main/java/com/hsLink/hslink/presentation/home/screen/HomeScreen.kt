@@ -122,9 +122,11 @@ fun HomeScreen(
         item {
             HomeCarousel(
                 pagerImages = listOf(
-                    "https://cdn.edujin.co.kr/news/photo/202209/39788_81397_67.png",
-                    "image2",
-                    "image3"
+                    "https://www.hansung.ac.kr/sites/hansung/images/main/slide_main/24-003.jpg",
+                    "https://www.hansung.ac.kr/sites/hansung/images/main/slide_main/24-%EC%A0%84%EA%B5%AC.jpg",
+                    "https://www.hansung.ac.kr/sites/hansung/images/main/slide_main/%EC%84%B1%EA%B9%9403.jpg",
+                    "https://www.hansung.ac.kr/sites/hansung/images/main/slide_main/%EC%84%B1%EA%B9%9401.jpg",
+                    "https://www.hansung.ac.kr/sites/hansung/images/main/slide_main/24-001.jpg"
                 ),
             )
         }
