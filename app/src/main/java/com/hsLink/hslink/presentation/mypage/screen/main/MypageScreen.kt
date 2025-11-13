@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -20,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
@@ -27,6 +31,8 @@ import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserSummaryDto
 import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
+import com.hsLink.hslink.presentation.login.navigation.navigateToLogin
+import com.hsLink.hslink.presentation.mypage.component.career.ConfirmDialog
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageCardItemContainer
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageDetailItemContent
 import com.hsLink.hslink.presentation.mypage.component.main.MyPageItemData
@@ -61,7 +67,12 @@ fun MypageRoute(
 ) {
     val userSummary by viewModel.userSummary.collectAsState() // ← 변경
     val isLoading by viewModel.isLoading.collectAsState()
+    val isAuthLoading by viewModel.isAuthLoading.collectAsState()
     val error by viewModel.error.collectAsState()
+    val logoutSuccess by viewModel.logoutSuccess.collectAsState() // ← 추가
+    val withdrawSuccess by viewModel.withdrawSuccess.collectAsState() // ← 추가
+
+
 
     LaunchedEffect(Unit) {
         viewModel.loadUserSummary() // 또는 loadMypage()
@@ -76,14 +87,37 @@ fun MypageRoute(
         }
     }
 
+    // 로그아웃/탈퇴 성공 시 처리
+    LaunchedEffect(error) {
+        error?.let { errorMessage ->
+            if (errorMessage.contains("성공")) {
+                // 로그인 화면으로 이동 (추후 구현)
+                // navController.navigateToLogin()
+            }
+        }
+    }
+
+
+    LaunchedEffect(logoutSuccess, withdrawSuccess) {
+        if (logoutSuccess || withdrawSuccess) {
+            navController.navigateToLogin(
+                navOptions = NavOptions.Builder()
+                    .setPopUpTo(0, inclusive = true) // ← 모든 백스택 클리어
+                    .build()
+            )
+        }
+    }
     MypageScreen(
         paddingValues = paddingValues,
-        userSummary = userSummary, // ← 변경
+        userSummary = userSummary,
         isLoading = isLoading,
+        isAuthLoading = isAuthLoading, // ← 추가
         error = error,
         onNavigateToProfile = {
             navController.navigateToProfileEdit()
-        }
+        },
+        onLogout = viewModel::logout, // ← 추가
+        onWithdraw = viewModel::withdraw // ← 추가
     )
 }
 
@@ -94,12 +128,17 @@ fun MypageScreen(
     userSummary: MyPageUserSummaryDto? = null, // ← 변경
     isLoading: Boolean = false,
     error: String? = null,
+    isAuthLoading: Boolean = false, // ← 추가
     onNavigateToProfile: () -> Unit = {},
     onNavigateToPosts: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
-    onLogout: () -> Unit = {},
-    onQuit: () -> Unit = {},
+    onLogout: () -> Unit = {}, // ← 추가
+    onWithdraw: () -> Unit = {}, // ← 추가
 ) {
+
+    // ← 다이얼로그 상태 관리
+    var showLogoutDialog by remember { mutableStateOf(false) }
+    var showWithdrawDialog by remember { mutableStateOf(false) }
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -151,9 +190,42 @@ fun MypageScreen(
                     MyPageItemData(id = "4", title = "탈퇴하기", route = "/quit")
                 ),
                 onItemClick = { item ->
-                    // 클릭 처리
+                    when (item.id) {
+                        "3" -> showLogoutDialog = true  // ← 로그아웃 다이얼로그 표시
+                        "4" -> showWithdrawDialog = true // ← 탈퇴 다이얼로그 표시
+                    }
                 }
             )
         }
     }
+
+    // ← 로그아웃 확인 다이얼로그
+    if (showLogoutDialog) {
+        ConfirmDialog(
+            title = "로그아웃을\n하시겠습니까?",
+            message = null,
+            cancelText = "취소",
+            confirmText = "확인",
+            onDismiss = { showLogoutDialog = false },
+            onConfirm = {
+                showLogoutDialog = false
+                onLogout() // ← 실제 로그아웃 실행
+            }
+        )
     }
+
+    // ← 계정 삭제 확인 다이얼로그
+    if (showWithdrawDialog) {
+        ConfirmDialog(
+            title = "계정을 삭제하시겠습니까?",
+            message = "데이터가 복구되지 않는데 괜찮으신가요?",
+            cancelText = "취소",
+            confirmText = "확인",
+            onDismiss = { showWithdrawDialog = false },
+            onConfirm = {
+                showWithdrawDialog = false
+                onWithdraw() // ← 실제 계정 탈퇴 실행
+            }
+        )
+    }
+}

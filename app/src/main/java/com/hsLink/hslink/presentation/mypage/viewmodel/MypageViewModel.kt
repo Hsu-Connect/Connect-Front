@@ -9,6 +9,7 @@ import com.hsLink.hslink.data.dto.request.mypage.UpdateProfileRequestDto
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserProfileDto
 import com.hsLink.hslink.data.dto.response.mypage.MyPageUserSummaryDto
 import com.hsLink.hslink.data.dto.response.mypage.UserProfileDto
+import com.hsLink.hslink.domain.repository.AuthRepository
 import com.hsLink.hslink.domain.repository.mypage.MypageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MypageViewModel @Inject constructor(
-    private val mypageRepository: MypageRepository
+    private val mypageRepository: MypageRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _userProfile = MutableStateFlow<MyPageUserProfileDto?>(null)
@@ -30,6 +32,19 @@ class MypageViewModel @Inject constructor(
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
+
+    // ← 로그아웃 성공 이벤트 추가
+    private val _logoutSuccess = MutableStateFlow(false)
+    val logoutSuccess: StateFlow<Boolean> = _logoutSuccess.asStateFlow()
+
+    // ← 탈퇴 성공 이벤트 추가
+    private val _withdrawSuccess = MutableStateFlow(false)
+    val withdrawSuccess: StateFlow<Boolean> = _withdrawSuccess.asStateFlow()
+
+
+    // ← 로그아웃/탈퇴 상태 추가
+    private val _isAuthLoading = MutableStateFlow(false)
+    val isAuthLoading: StateFlow<Boolean> = _isAuthLoading.asStateFlow()
 
     init {
         getUserSummary() // ← getUserProfile() 대신 변경
@@ -104,6 +119,46 @@ class MypageViewModel @Inject constructor(
             ).also {
                 _isLoading.value = false
             }
+        }
+    }
+    // ← 새로 추가: 로그아웃 기능
+    fun logout() {
+        viewModelScope.launch {
+            _isAuthLoading.value = true
+            Log.d("MypageViewModel", "로그아웃 시작")
+
+            authRepository.logout().fold(
+                onSuccess = {
+                    Log.d("MypageViewModel", "로그아웃 성공")
+                    _error.value = null
+                    _logoutSuccess.value = true // ← 성공 이벤트 발생
+                },
+                onFailure = { exception ->
+                    Log.e("MypageViewModel", "로그아웃 실패: ${exception.message}")
+                    _error.value = exception.message
+                }
+            )
+            _isAuthLoading.value = false
+        }
+    }
+
+    fun withdraw() {
+        viewModelScope.launch {
+            _isAuthLoading.value = true
+            Log.d("MypageViewModel", "계정 탈퇴 시작")
+
+            authRepository.withdraw().fold(
+                onSuccess = { withdrawResponse ->
+                    Log.d("MypageViewModel", "계정 탈퇴 성공: userId=${withdrawResponse.userId}")
+                    _error.value = null
+                    _withdrawSuccess.value = true // ← 성공 이벤트 발생
+                },
+                onFailure = { exception ->
+                    Log.e("MypageViewModel", "계정 탈퇴 실패: ${exception.message}")
+                    _error.value = exception.message
+                }
+            )
+            _isAuthLoading.value = false
         }
     }
 }
