@@ -24,5 +24,5 @@ data class MentorItemDto(
     val major: String,
     val jobSeeking: Boolean,
     val employed: Boolean,
-    val academicStatus: String
+    val academicStatus: String? = null
 )

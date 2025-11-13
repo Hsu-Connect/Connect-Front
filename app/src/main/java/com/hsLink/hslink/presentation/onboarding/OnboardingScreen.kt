@@ -1,5 +1,6 @@
 package com.hsLink.hslink.presentation.onboarding
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +20,13 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.hsLink.hslink.core.designsystem.component.HsLinkActionButton
 import com.hsLink.hslink.core.designsystem.component.HsLinkActionButtonSize
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
+import com.hsLink.hslink.data.dto.response.onboarding.CareerDto
+import com.hsLink.hslink.presentation.mypage.navigation.career.navigateToCareerEdit
+import com.hsLink.hslink.presentation.mypage.viewmodel.CareerViewModel
 import com.hsLink.hslink.presentation.onboarding.component.OnboardingProgressBar
 import com.hsLink.hslink.presentation.onboarding.component.screen.CareerScreen
 import com.hsLink.hslink.presentation.onboarding.component.screen.EmailScreen
@@ -42,9 +47,13 @@ fun OnboardingRoute(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit,
     navigateToHome: () -> Unit,
+    navController: NavController,
     viewModel: OnboardingViewModel = hiltViewModel(),
+    //careerViewModel: CareerViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    //val careerList by careerViewModel.careers.collectAsStateWithLifecycle()
+
 
     when (state.currentStep) {
         OnboardingStep.STUDENT_ID -> {
@@ -85,23 +94,43 @@ fun OnboardingRoute(
 
         OnboardingStep.EMPLOYMENT_STATUS -> {
             EmploymentStatusScreen(
-                selectedStatus = state.employmentStatus,
+                selectedStatus = state.academicStatus, // ← employmentStatus → academicStatus
                 progress = state.currentStep.progress,
                 paddingValues = paddingValues,
-                onStatusSelect = viewModel::updateEmploymentStatus,
+                onStatusSelect = viewModel::updateAcademicStatus, // ← updateEmploymentStatus → updateAcademicStatus
                 onPreviousClick = viewModel::moveToPreviousStep,
                 onNextClick = viewModel::moveToNextStep
             )
         }
 
         OnboardingStep.CAREER -> {
+            // ← 안전한 변환으로 수정
+            val safeCareerList = try {
+                state.careerList.map { career ->
+                    CareerDto(
+                        id = career.id,
+                        companyName = career.companyName,
+                        position = career.position,
+                        jobType = career.jobType,
+                        employed = career.employed,
+                        startYm = career.startYm,
+                        endYm = career.endYm
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("OnboardingRoute", "타입 변환 실패", e)
+                emptyList()
+            }
 
             CareerScreen(
                 selectedCareer = state.career,
-                careerList = state.careerList,
+                careerList = safeCareerList, // ← 안전한 리스트 사용
                 progress = state.currentStep.progress,
                 paddingValues = paddingValues,
                 onCareerSelect = viewModel::updateCareer,
+                onCareerClick = { career -> // career는 이제 CareerDto 타입
+                    navController.navigateToCareerEdit(careerId = career.id) // ← .toLong() 제거 (이미 Int로 맞춤)
+                },
                 onPreviousClick = viewModel::moveToPreviousStep,
                 onNextClick = viewModel::moveToNextStep,
                 onAddCareerClick = viewModel::openJobInfoForm

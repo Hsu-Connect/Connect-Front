@@ -59,16 +59,16 @@ fun LinksScreen(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                if (linkList.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(linkList) { link ->
-                            LinkItem(link)
-                        }
-                    }
-                }
+//                if (linkList.isNotEmpty()) {
+//                    LazyColumn(
+//                        modifier = Modifier.fillMaxSize(),
+//                        verticalArrangement = Arrangement.spacedBy(12.dp)
+//                    ) {
+//                        items(linkList) { link ->
+//                            LinkItem(link)
+//                        }
+//                    }
+//                }
             }
 
             Box(
