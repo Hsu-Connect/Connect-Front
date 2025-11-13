@@ -39,6 +39,10 @@ class MypageViewModel @Inject constructor(
         getUserProfile()
     }
 
+    // ← 새로 추가: public loadUserSummary 함수
+    fun loadUserSummary() {
+        getUserSummary()
+    }
     private fun getUserProfile() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -72,6 +76,7 @@ class MypageViewModel @Inject constructor(
                     Log.d("MypageViewModel", "프로필 수정 성공")
                     // 수정 후 다시 조회
                     getUserProfile() // ← 이건 그대로 유지 (전체 정보 필요)
+                    getUserSummary()
                 }
                 .onFailure { exception ->
                     Log.e("MypageViewModel", "프로필 수정 실패: ${exception.message}")

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.component.HsLinkTopBar
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
@@ -49,7 +51,6 @@ private fun buildStatusText(jobSeeking: Boolean, academicStatus: String, employe
 @Preview(showBackground = true)
 @Composable
 private fun MypageScreenPreview() {
-    MypageScreen(paddingValues = PaddingValues())
 }
 
 @Composable
@@ -61,6 +62,19 @@ fun MypageRoute(
     val userSummary by viewModel.userSummary.collectAsState() // ← 변경
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadUserSummary() // 또는 loadMypage()
+    }
+
+    // ← 프로필 수정 후 돌아왔을 때 새로고침
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    LaunchedEffect(currentBackStackEntry) {
+        // 프로필 수정 화면에서 돌아왔을 때만 새로고침
+        if (currentBackStackEntry?.destination?.route?.contains("mypage") == true) {
+            viewModel.loadUserSummary()
+        }
+    }
 
     MypageScreen(
         paddingValues = paddingValues,
