@@ -1,5 +1,6 @@
 package com.hsLink.hslink.data.dto.request.onboarding
 
+import com.hsLink.hslink.presentation.onboarding.model.AcademicStatus
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,5 +17,7 @@ data class OnboardingRequest (
     @SerialName("mentor")
     val mentor : Boolean,
     @SerialName("email")
-    val email : String
+    val email : String,
+    @SerialName("academicStatus")
+    val academicStatus: AcademicStatus
     )

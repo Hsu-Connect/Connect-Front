@@ -94,10 +94,10 @@ fun OnboardingRoute(
 
         OnboardingStep.EMPLOYMENT_STATUS -> {
             EmploymentStatusScreen(
-                selectedStatus = state.employmentStatus,
+                selectedStatus = state.academicStatus, // ← employmentStatus → academicStatus
                 progress = state.currentStep.progress,
                 paddingValues = paddingValues,
-                onStatusSelect = viewModel::updateEmploymentStatus,
+                onStatusSelect = viewModel::updateAcademicStatus, // ← updateEmploymentStatus → updateAcademicStatus
                 onPreviousClick = viewModel::moveToPreviousStep,
                 onNextClick = viewModel::moveToNextStep
             )

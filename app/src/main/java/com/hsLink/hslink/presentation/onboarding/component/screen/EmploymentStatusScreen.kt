@@ -21,15 +21,15 @@ import com.hsLink.hslink.core.designsystem.component.HsLinkButtonSize
 import com.hsLink.hslink.core.designsystem.component.HsLinkSelectButton
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.onboarding.OnboardingScreen
-import com.hsLink.hslink.presentation.onboarding.model.EmploymentStatus
+import com.hsLink.hslink.presentation.onboarding.model.AcademicStatus
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EmploymentStatusScreen(
-    selectedStatus: EmploymentStatus?,
+    selectedStatus: AcademicStatus?, // ← EmploymentStatus → AcademicStatus,
     progress: Float,
     paddingValues: PaddingValues,
-    onStatusSelect: (EmploymentStatus) -> Unit,
+    onStatusSelect: (AcademicStatus) -> Unit, // ← EmploymentStatus → AcademicStatus
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -52,7 +52,7 @@ fun EmploymentStatusScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            EmploymentStatus.entries.chunked(2).forEach { rowItems ->
+            AcademicStatus.entries.chunked(2).forEach { rowItems ->
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
@@ -80,7 +80,7 @@ fun EmploymentStatusScreen(
 private fun EmploymentStatusScreenPreview() {
     HsLinkTheme {
         EmploymentStatusScreen(
-            selectedStatus = EmploymentStatus.WORKING,
+            selectedStatus = AcademicStatus.ENROLLED, // ← EmploymentStatus.WORKING → AcademicStatus.ENROLLED
             progress = 0.9f,
             paddingValues = PaddingValues(),
             onStatusSelect = {},

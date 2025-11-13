@@ -8,7 +8,7 @@ data class OnboardingState(
     val name: String = "",
     val major: String = "",
     val majorQuery: String = "",
-    val employmentStatus: EmploymentStatus? = null,
+    val academicStatus: AcademicStatus? = null,
     val career: Boolean? = null,
     val isExperiencedPath: Boolean = false,
     val companyName: String = "",
@@ -64,8 +64,8 @@ enum class OnboardingStep(val stepNumber: Int, val totalSteps: Int = 11) {
 }
 
 
-enum class EmploymentStatus(val label: String) {
-    WORKING("재학 중"),
+enum class AcademicStatus(val label: String) {
+    ENROLLED("재학 중"),     // WORKING → ENROLLED (API 스펙에 맞게)
     GRADUATED("졸업"),
     EXPECTED_GRADUATION("졸업예정"),
     COMPLETED("수료"),

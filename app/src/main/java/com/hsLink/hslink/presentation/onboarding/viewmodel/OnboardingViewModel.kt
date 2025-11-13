@@ -6,7 +6,7 @@ import com.hsLink.hslink.data.dto.request.onboarding.CareerRequest
 import com.hsLink.hslink.data.dto.request.onboarding.LinkRequest
 import com.hsLink.hslink.data.dto.request.onboarding.OnboardingRequest
 import com.hsLink.hslink.domain.repository.onboarding.OnboardingRepository
-import com.hsLink.hslink.presentation.onboarding.model.EmploymentStatus
+import com.hsLink.hslink.presentation.onboarding.model.AcademicStatus
 import com.hsLink.hslink.presentation.onboarding.model.JobType
 import com.hsLink.hslink.presentation.onboarding.model.LinkType
 import com.hsLink.hslink.presentation.onboarding.model.OnboardingState
@@ -118,7 +118,7 @@ class OnboardingViewModel @Inject constructor(
                 },
                 startYm = s.tempStartYm,
                 endYm = s.tempEndYm,
-                employed = s.tempIsEmployed
+                employed = s.tempIsEmployed,
             )
 
             _state.update { it.copy(isLoading = true) }
@@ -221,7 +221,10 @@ class OnboardingViewModel @Inject constructor(
     fun updateName(name: String) { _state.update { it.copy(name = name) } }
     fun updateMajor(major: String) { _state.update { it.copy(major = major) } }
     fun updateMajorQuery(query: String) { _state.update { it.copy(majorQuery = query) } }
-    fun updateEmploymentStatus(status: EmploymentStatus) { _state.update { it.copy(employmentStatus = status) } }
+    //fun updateEmploymentStatus(status: EmploymentStatus) { _state.update { it.copy(employmentStatus = status) } }
+    fun updateAcademicStatus(status: AcademicStatus) {
+        _state.update { it.copy(academicStatus = status) } // ← employmentStatus → academicStatus
+    }
     fun updateCareer(isExperienced: Boolean) {
         _state.update { it.copy(career = isExperienced, isExperiencedPath = isExperienced) }
     }
@@ -235,7 +238,8 @@ class OnboardingViewModel @Inject constructor(
             val request = OnboardingRequest(
                 name = currentState.name, major = currentState.major, studentNumber = currentState.studentId,
                 jobSeeking = currentState.isJobSeeking ?: false, mentor = currentState.wantsMentorship ?: false,
-                email = currentState.email
+                email = currentState.email,
+                academicStatus = currentState.academicStatus!!
             )
 
             onboardingRepository.submitOnboarding(request)
@@ -249,4 +253,5 @@ class OnboardingViewModel @Inject constructor(
                 }
         }
     }
+
 }
