@@ -18,16 +18,20 @@ import androidx.compose.ui.unit.dp
 import com.hsLink.hslink.R
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.core.util.noRippleClickable
+import com.hsLink.hslink.data.dto.response.onboarding.CareerDto
 import com.hsLink.hslink.domain.model.search.CareerItemEntity
+import com.hsLink.hslink.presentation.mypage.component.profile.CareerCard
 import com.hsLink.hslink.presentation.onboarding.OnboardingScreen
 
 @Composable
 fun CareerScreen(
     selectedCareer: Boolean?,
-    careerList: List<CareerItemEntity>,
+    //careerList: List<CareerItemEntity>,
+    careerList: List<CareerDto>,
     progress: Float,
     paddingValues: PaddingValues,
     onCareerSelect: (Boolean) -> Unit,
+    onCareerClick: (CareerDto) -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
     onAddCareerClick: () -> Unit,
@@ -57,7 +61,6 @@ fun CareerScreen(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -69,12 +72,26 @@ fun CareerScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(careerList) { career ->
-                            CareerItem(career)
+                            val dateRange = if (career.employed) {
+                                "${career.startYm} ~ 재직 중"
+                            } else {
+                                "${career.startYm} ~ ${career.endYm ?: "-"}"
+                            }
+
+                            CareerCard(
+                                name = career.companyName,
+                                title = career.position,
+                                dateRange = dateRange,
+                                onClick = {
+                                    onCareerClick(career)
+                                }
+                            )
                         }
                     }
                 }
             }
 
+            // ← "커리어 추가하기" 버튼이 여기에 와야 해요!
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,7 +129,7 @@ fun CareerScreen(
                     )
                 }
             }
-        }
+        } // ← 여기서 Column이 끝나야 해요!
     }
 }
 

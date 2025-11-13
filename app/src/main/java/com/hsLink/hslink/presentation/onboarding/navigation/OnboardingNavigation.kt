@@ -19,12 +19,14 @@ fun NavGraphBuilder.onboardingNavGraph(
     padding: PaddingValues,
     navigateUp: () -> Unit,
     navigateHome: () -> Unit,
+    navController: NavController,
 ) {
     composable<Onboarding> {
         OnboardingRoute(
             paddingValues = padding,
+            navController = navController,
             navigateUp = navigateUp,
-            navigateToHome = navigateHome
+            navigateToHome = navigateHome,
         )
     }
 }

@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.hsLink.hslink.core.designsystem.theme.HsLinkTheme
 import com.hsLink.hslink.presentation.login.screen.KaKaoLoginScreen
+import com.hsLink.hslink.presentation.mypage.navigation.career.careerNavGraph
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
@@ -160,9 +161,15 @@ fun NavGraphBuilder.authNavGraph(
             com.hsLink.hslink.presentation.onboarding.OnboardingRoute(
                 paddingValues = paddingValues,
                 navigateUp = { navController.popBackStack() },
-                navigateToHome = onNavigateToAppMain
+                navigateToHome = onNavigateToAppMain,
+                navController = navController,
             )
+
         }
+        careerNavGraph(
+            padding = paddingValues,
+            navController = navController
+        )
     }
 }
 

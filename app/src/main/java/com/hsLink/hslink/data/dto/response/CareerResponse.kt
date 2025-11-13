@@ -28,7 +28,7 @@ data class LinkResponse(
 
 @Serializable
 data class CareerDto(
-    val id: Long,
+    val id: Int,
     val companyName: String,
     val position: String,
     val jobType: JobType,
